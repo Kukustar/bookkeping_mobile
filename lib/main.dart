@@ -1,4 +1,3 @@
-import 'package:bookkeping_mobile/screens/home/home_screen.dart';
 import 'package:bookkeping_mobile/screens/login/login_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -14,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData.light(),
-      home: LoginScreen(),
+      home: const LoginScreen(),
       // home: HomeScreen(),
     );
   }

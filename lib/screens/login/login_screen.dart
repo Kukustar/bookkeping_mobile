@@ -73,6 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               TextFormField(
+                autocorrect: false,
                 controller: emailEditingController,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -105,7 +106,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            print('send request');
                             sendLoginRequest();
                           }
                         },
