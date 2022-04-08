@@ -13,29 +13,10 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  //
-  // void loadBalances() async {
-  //   final SharedPreferences prefs = await _prefs;
-  //   final String accessToken = prefs.getString('access').toString();
-  //
-  //   try {
-  //     http.Response response = await http.get(
-  //       Uri.parse('http://localhost:3003/api/available-for-day/'),
-  //       headers: {
-  //         'Authorization': "Bearer $accessToken",
-  //         'Content-Type': 'application/json'
-  //       }
-  //     );
-  //
-  //     print(response.statusCode);
-  //   } catch (exception) {
-  //     print(exception);
-  //   }
-  // }
 
   @override
   void initState() {
-    PurchaseRepository().fetch();
+    PurchaseRepository().getPurchasesFromBackend();
     super.initState();
   }
 
