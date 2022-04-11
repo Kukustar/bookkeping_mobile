@@ -15,10 +15,14 @@ class NetworkResponse {
 
   factory NetworkResponse.fromBackend(body, int status) {
     NetworkResponseStatus apiResponseStatus = NetworkResponseStatus.success;
-    if (status != 400) {
+    if (status != 200) {
       apiResponseStatus = NetworkResponseStatus.failed;
     }
     return NetworkResponse(body: body, status: apiResponseStatus);
+  }
+
+  factory NetworkResponse.empty() {
+    return const NetworkResponse(body: {}, status: NetworkResponseStatus.failed);
   }
 }
 
@@ -37,7 +41,21 @@ class NetworkService {
     HttpClient client = HttpClient();
     HttpClientRequest request = await client.openUrl('get', Uri.parse(endPoint));
     request.headers.set('Authorization', "Bearer $accessToken");
-    request.headers.set('Content-Type', 'application/json');
+    request.headers.contentType = ContentType("application", "json", charset: "utf-8");
+    HttpClientResponse response = await request.close();
+    String decodedStringResponse = await transformHttpResponse(response);
+    var decodedJsonResponse = json.decode(decodedStringResponse);
+
+    return NetworkResponse.fromBackend(decodedJsonResponse, response.statusCode);
+  }
+
+  Future<NetworkResponse> postWithOutAccessHeader(String endPoint, Map<String, dynamic> body) async {
+    HttpClient client = HttpClient();
+    HttpClientRequest request = await client.openUrl('post', Uri.parse(endPoint));
+    final String bodyEncoded = json.encode(body);
+    request.headers.contentType = ContentType("application", "json", charset: "utf-8");
+    request.headers.contentLength = bodyEncoded.length;
+    request.write(bodyEncoded);
     HttpClientResponse response = await request.close();
     String decodedStringResponse = await transformHttpResponse(response);
     var decodedJsonResponse = json.decode(decodedStringResponse);
