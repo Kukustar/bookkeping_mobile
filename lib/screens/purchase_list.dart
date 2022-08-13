@@ -2,6 +2,7 @@ import 'package:bookkeping_mobile/purchase/entity.dart';
 import 'package:bookkeping_mobile/purchase/purchase_bloc.dart';
 import 'package:bookkeping_mobile/purchase/purchase_event.dart';
 import 'package:bookkeping_mobile/purchase/purchase_state.dart';
+import 'package:bookkeping_mobile/screens/add_purchase.dart';
 import 'package:bookkeping_mobile/screens/home/purchase_element.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,7 +13,14 @@ class PurchaseListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.chevron_left),
+        ),
+      ),
       floatingActionButton: ElevatedButton(
         style: ElevatedButton.styleFrom(
           shape: CircleBorder(),
@@ -21,7 +29,14 @@ class PurchaseListScreen extends StatelessWidget {
           surfaceTintColor: Colors.blue
         ),
         child: Icon(Icons.add),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (_) => AddPurchaseScreen()
+              )
+          );
+        },
       ),
       body: SingleChildScrollView(
         child: Column(

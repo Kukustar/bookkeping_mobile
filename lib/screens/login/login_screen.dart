@@ -14,7 +14,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _formKey = GlobalKey<FormState>();
+  // final _formKey = GlobalKey<FormState>();
 
   TextEditingController emailEditingController = TextEditingController();
   TextEditingController passwordEditingController = TextEditingController();
@@ -23,7 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Form(
-        key: _formKey,
+        // key: _formKey,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 50),
           child: Column(
@@ -62,14 +62,15 @@ class _LoginScreenState extends State<LoginScreen> {
                           padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 20))
                         ),
                         onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            BlocProvider
-                                .of<AuthBloc>(context)
-                                .add(LoginUser(
-                                emailEditingController.text,
-                                passwordEditingController.text
-                            ));
-                          }
+                          BlocProvider
+                              .of<AuthBloc>(context)
+                              .add(LoginUser(
+                              emailEditingController.text,
+                              passwordEditingController.text
+                          ));
+                          // if (_formKey.currentState!.validate()) {
+                          //
+                          // }
                         },
                         child: Text('Войти')
                     ),

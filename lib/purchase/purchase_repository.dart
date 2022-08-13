@@ -5,7 +5,7 @@ import 'package:bookkeping_mobile/service/core/api_service.dart';
 import 'package:bookkeping_mobile/service/core/network_service.dart';
 
 class PurchaseRepository {
-  static const purchaseEndPoint = 'http://localhost:3003/purchases';
+  static const purchaseEndPoint = 'http://192.168.1.122:3003/purchases';
 
   final _purchaseController = StreamController<List<Purchase>>();
   final _tokenExpireController = StreamController<bool>();

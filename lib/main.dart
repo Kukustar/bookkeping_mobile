@@ -1,6 +1,10 @@
+import 'dart:io';
+import 'package:flutter_localizations/flutter_localizations.dart';
+
 import 'package:bookkeping_mobile/auth/auth_repository.dart';
 import 'package:bookkeping_mobile/purchase/purchase_bloc.dart';
 import 'package:bookkeping_mobile/purchase/purchase_repository.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -10,7 +14,18 @@ import 'package:bookkeping_mobile/screens/home/home_screen.dart';
 import 'package:bookkeping_mobile/screens/login/login_screen.dart';
 import 'package:bookkeping_mobile/splash_page.dart';
 
+class MyHttpOverrides extends HttpOverrides{
+  @override
+  HttpClient createHttpClient(SecurityContext? context){
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+  }
+}
+
 void main() {
+  if (kDebugMode) {
+    HttpOverrides.global = MyHttpOverrides();
+  }
   runApp(App(
       authRepository: AuthRepository(),
       purchaseRepository: PurchaseRepository(),
@@ -52,6 +67,10 @@ class App extends StatelessWidget {
           )
         ],
         child: MaterialApp(
+          localizationsDelegates: GlobalMaterialLocalizations.delegates,
+          supportedLocales: [
+            const Locale('ru'),
+          ],
           onGenerateRoute: (_) => SplashPage.route(),
           navigatorKey: _navigatorKey,
           builder: (context, child) {

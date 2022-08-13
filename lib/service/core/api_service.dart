@@ -66,7 +66,7 @@ class ApiService extends NetworkService {
     final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
     final SharedPreferences prefs = await _prefs;
     final String refreshToken = prefs.getString('refresh').toString();
-    NetworkResponse response = await postWithOutAccessHeader('http://localhost:3003/api/token/refresh/', { 'refresh': refreshToken });
+    NetworkResponse response = await postWithOutAccessHeader('http://192.168.1.122:3003/api/token/refresh/', { 'refresh': refreshToken });
 
     if (response.status == NetworkResponseStatus.success) {
        prefs.setString('access', response.body['access'].toString());
@@ -88,7 +88,7 @@ class ApiService extends NetworkService {
   }
 
   Future<NetworkResponse> authUser(String email, password) async {
-    NetworkResponse response = await postWithOutAccessHeader('http://localhost:3003/api/token/', {
+    NetworkResponse response = await postWithOutAccessHeader('http://192.168.1.122:3003/api/token/', {
         'username': email,
         'password': password
     });
