@@ -18,3 +18,17 @@ class AuthStatusChangedByPurchase extends PurchaseEvent {
   bool get tokenExpire => _tokenExpire;
 }
 
+class LoadPage extends PurchaseEvent {
+  LoadPage(this._page);
+  final int _page;
+
+  int get page => _page;
+}
+
+class PurchaseCountChanged extends PurchaseEvent {
+  PurchaseCountChanged(this._count);
+  final int _count;
+
+  int get count => _count;
+}
+

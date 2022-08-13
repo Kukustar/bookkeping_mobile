@@ -9,6 +9,7 @@ class PurchaseRepository {
 
   final _purchaseController = StreamController<List<Purchase>>();
   final _tokenExpireController = StreamController<bool>();
+  final _countController = StreamController<int>();
 
   Stream<List<Purchase>> get purchaseList async* {
     yield* _purchaseController.stream;
@@ -18,17 +19,21 @@ class PurchaseRepository {
     yield* _tokenExpireController.stream;
   }
 
-  Future<void> getPurchasesFromBackend() async {
+  Stream<int> get listCount async* {
+    yield* _countController.stream;
+  }
+
+  Future<void> getPurchasesFromBackend({ page = 1 }) async {
 
     NetworkResponse response = await ApiService()
-        .wrapRequestWithTokenCheck(ApiService().fetch, purchaseEndPoint);
+        .wrapRequestWithTokenCheck(ApiService().fetch, '$purchaseEndPoint?page=$page');
 
-    print(response.status);
     switch (response.status) {
       case NetworkResponseStatus.success:
         List<Purchase> purchases = List<Purchase>
             .from(response.body['results'].toList().map((element) => Purchase.fromJson(element)));
         _purchaseController.add(purchases);
+        _countController.add(response.body['count']);
         break;
       case NetworkResponseStatus.failed:
         break;

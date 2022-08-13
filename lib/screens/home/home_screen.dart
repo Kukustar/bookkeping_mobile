@@ -7,6 +7,7 @@ import 'package:bookkeping_mobile/purchase/purchase_event.dart';
 import 'package:bookkeping_mobile/purchase/purchase_state.dart';
 
 import 'package:bookkeping_mobile/screens/home/purchase_element.dart';
+import 'package:bookkeping_mobile/screens/purchase_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -94,9 +95,19 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   BlocBuilder<PurchaseBloc, PurchaseState>(
                     builder: (context, state) {
-                      return state.purchaseList.length > 3
-                          ? ElevatedButton(onPressed: () {}, child: Text('Еще'))
-                          : SizedBox();
+                      return state.purchaseList.length > 3 ?
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => PurchaseListScreen()
+                                )
+                            );
+                          },
+                          child: Text('Еще')
+                      ) :
+                      SizedBox();
                     },
                   ),
                 ],

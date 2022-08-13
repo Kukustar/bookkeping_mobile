@@ -20,7 +20,7 @@ class PurchaseElement extends StatelessWidget {
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          border: Border.all(color: Theme.of(context).colorScheme.primary),
+          border: Border.all(color: Colors.grey.withAlpha(50)),
           borderRadius: BorderRadius.circular(5),
           color: Colors.white,
         ),
@@ -35,9 +35,14 @@ class PurchaseElement extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(title),
-                        const Spacer(),
+                        Flexible(
+                          child: Text(
+                              title,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
                         Text('${amount.toString()} ₽')
                       ],
                     ),

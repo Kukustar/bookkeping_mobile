@@ -15,11 +15,16 @@ class PurchaseBloc extends Bloc<PurchaseEvent, PurchaseState> {
    on<LoadPurchases>(_onLoadPurchases);
    on<AuthStatusChangedByPurchase>(_onAuthStatusChangedByPurchase);
    on<LoadPurchasesSuccess>(_onLoadPurchasesSuccess);
+   on<LoadPage>(_onLoadPage);
+   on<PurchaseCountChanged>(_onPurchaseCountChanged);
    _tokenExpireSubscription = _purchaseRepository.tokenExpire.listen(
            (tokenExpire) => add(AuthStatusChangedByPurchase(tokenExpire))
    );
    _purchaseListSubscription = _purchaseRepository.purchaseList.listen(
            (list)  => add(LoadPurchasesSuccess(list))
+   );
+   _purchaseCountSubscription = _purchaseRepository.listCount.listen(
+           (count) => add(PurchaseCountChanged(count))
    );
   }
 
@@ -28,11 +33,16 @@ class PurchaseBloc extends Bloc<PurchaseEvent, PurchaseState> {
 
   late StreamSubscription<bool> _tokenExpireSubscription;
   late StreamSubscription<List<Purchase>> _purchaseListSubscription;
+  late StreamSubscription<int> _purchaseCountSubscription;
 
   _onLoadPurchases(LoadPurchases event, Emitter<PurchaseState> emit) async {
     emit(state.copyWith(isPurchaseListLoading: true));
     await _purchaseRepository.getPurchasesFromBackend();
     emit(state.copyWith(isPurchaseListLoading: false));
+  }
+
+  _onPurchaseCountChanged(PurchaseCountChanged event, Emitter<PurchaseState> emit) {
+    emit(state.copyWith(count: event.count));
   }
 
   _onLoadPurchasesSuccess(LoadPurchasesSuccess event, Emitter<PurchaseState> emit) {
@@ -45,10 +55,17 @@ class PurchaseBloc extends Bloc<PurchaseEvent, PurchaseState> {
     }
   }
 
+  _onLoadPage(LoadPage event, Emitter<PurchaseState> emit) async {
+    emit(state.copyWith(isPurchasePageLoading: true, page: event.page));
+    await _purchaseRepository.getPurchasesFromBackend(page: event.page);
+    emit(state.copyWith(isPurchasePageLoading: false));
+  }
+
   @override
   Future<void> close() async {
     _tokenExpireSubscription.cancel();
     _purchaseListSubscription.cancel();
+    _purchaseCountSubscription.cancel();
     return super.close();
   }
 }
