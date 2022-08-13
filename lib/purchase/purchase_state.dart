@@ -22,7 +22,7 @@ class PurchaseState {
       return purchaseList;
     }
 
-    return purchaseList.slice(purchaseList.length - 3, purchaseList.length);
+    return purchaseList.slice(0, 3);
   }
 
   bool get canTapPrevButton {
