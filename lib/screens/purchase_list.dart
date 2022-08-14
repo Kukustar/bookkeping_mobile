@@ -39,8 +39,11 @@ class PurchaseListScreen extends StatelessWidget {
           );
         },
       ),
-      body: SingleChildScrollView(
-        child: Column(
+      body: RefreshIndicator(
+        onRefresh: () async {
+          BlocProvider.of<PurchaseBloc>(context).add(LoadPage(1));
+        },
+        child: ListView(
           children: [
             SizedBox(height: 10,),
             Row(

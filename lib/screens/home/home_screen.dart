@@ -54,9 +54,11 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       appBar: AppBar(title: Text(''),),
-      body: SingleChildScrollView(
-        child:  Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      body: RefreshIndicator(
+        onRefresh: () async {
+          BlocProvider.of<PurchaseBloc>(context).add(LoadPurchases());
+        },
+        child: ListView(
           children: [
             const SizedBox(height: 20),
             Padding(
