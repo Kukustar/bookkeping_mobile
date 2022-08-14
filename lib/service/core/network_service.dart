@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:http/http.dart' as http;
+
 enum NetworkResponseStatus {
   success,
   failed,
@@ -16,7 +18,7 @@ class NetworkResponse {
 
   factory NetworkResponse.fromBackend(body, int status) {
     NetworkResponseStatus apiResponseStatus = NetworkResponseStatus.success;
-    if (status != 200) {
+    if (status != 200 && status != 201) {
       apiResponseStatus = NetworkResponseStatus.failed;
     }
     return NetworkResponse(body: body, status: apiResponseStatus);
@@ -48,6 +50,40 @@ class NetworkService {
     var decodedJsonResponse = json.decode(decodedStringResponse);
 
     return NetworkResponse.fromBackend(decodedJsonResponse, response.statusCode);
+  }
+
+  Future<NetworkResponse> postData(String endPoint, String accessToken, Map<String, dynamic> body) async {
+
+    var response = await http.post(
+        Uri.parse(endPoint),
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Authorization': "Bearer $accessToken"
+      },
+      body: json.encode(body)
+    );
+
+    Map<String, dynamic> decodedResponse = await json.decode(utf8.decode(response.bodyBytes));
+
+    return NetworkResponse.fromBackend(decodedResponse, response.statusCode);
+
+  }
+
+  Future<NetworkResponse> putData(String endPoint, String accessToken, Map<String, dynamic> body) async {
+
+    var response = await http.put(
+        Uri.parse(endPoint),
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Authorization': "Bearer $accessToken"
+      },
+      body: json.encode(body)
+    );
+
+    Map<String, dynamic> decodedResponse = await json.decode(utf8.decode(response.bodyBytes));
+
+    return NetworkResponse.fromBackend(decodedResponse, response.statusCode);
+
   }
 
   Future<NetworkResponse> postWithOutAccessHeader(String endPoint, Map<String, dynamic> body) async {

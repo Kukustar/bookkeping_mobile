@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bookkeping_mobile/jwt_decode.dart';
 import 'package:bookkeping_mobile/service/core/api_service.dart';
 import 'package:bookkeping_mobile/service/core/network_service.dart';
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum AuthStatus {
@@ -32,16 +33,23 @@ class AuthRepository {
 
 
   Future<AuthStatus> checkAndUpdateTokes(String? access, String? refresh) async {
-    if (access != null && access != '') {
-      if (!Jwt.isExpired(access)) {
-        return AuthStatus.authenticated;
-      }
-
-      if (!Jwt.isExpired(refresh!)) {
-        NetworkResponseStatus status = await ApiService().updateAccessToken();
-        if (status == NetworkResponseStatus.success) {
+    try {
+      if (access != null && access != '') {
+        if (!Jwt.isExpired(access)) {
           return AuthStatus.authenticated;
         }
+
+        if (!Jwt.isExpired(refresh!)) {
+          NetworkResponseStatus status = await ApiService().updateAccessToken();
+          if (status == NetworkResponseStatus.success) {
+            return AuthStatus.authenticated;
+          }
+        }
+        return AuthStatus.unauthenticated;
+      }
+    } catch (exception) {
+      if (kDebugMode) {
+        print(exception);
       }
       return AuthStatus.unauthenticated;
     }
@@ -51,6 +59,7 @@ class AuthRepository {
 
   Future<void> authUser(String email, String password) async {
     NetworkResponse response = await ApiService().authUser(email, password);
+    print(response.status);
 
     if (response.status == NetworkResponseStatus.success) {
       _authStatusController.add(AuthStatus.authenticated);

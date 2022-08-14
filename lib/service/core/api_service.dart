@@ -39,6 +39,8 @@ class ApiService extends NetworkService {
   //   return response.body;
   // }
 
+
+
   Future<NetworkResponse> wrapRequestWithTokenCheck(Future<NetworkResponse> Function(String, String) requestFunction, String endPoint) async {
     final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
     final SharedPreferences prefs = await _prefs;
@@ -62,11 +64,36 @@ class ApiService extends NetworkService {
     }
   }
 
+  Future<NetworkResponse> wrapPostRequestWithTokenCheck(
+      Future<NetworkResponse> Function(String, String, Map<String, dynamic>) requestFunction,
+      String endPoint, Map<String, dynamic> body) async {
+    final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+    final SharedPreferences prefs = await _prefs;
+    final String? expireDateString = prefs.getString('expire_date');
+
+    if (isAccessTokenValid(expireDateString)) {
+      final String accessToken = prefs.getString('access').toString();
+      NetworkResponse response = await requestFunction(endPoint, accessToken, body);
+
+      return response;
+    } else if (isCanUpdateAccessToken(expireDateString)) {
+
+      await updateAccessToken();
+      final String accessToken = prefs.getString('access').toString();
+      NetworkResponse response = await requestFunction(endPoint, accessToken, body);
+
+      return response;
+    } else {
+
+      return NetworkResponse.tokenExpire();
+    }
+  }
+
   Future<NetworkResponseStatus> updateAccessToken( ) async {
     final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
     final SharedPreferences prefs = await _prefs;
     final String refreshToken = prefs.getString('refresh').toString();
-    NetworkResponse response = await postWithOutAccessHeader('http://192.168.1.122:3003/api/token/refresh/', { 'refresh': refreshToken });
+    NetworkResponse response = await postWithOutAccessHeader('http://192.168.1.104:3003/api/token/refresh/', { 'refresh': refreshToken });
 
     if (response.status == NetworkResponseStatus.success) {
        prefs.setString('access', response.body['access'].toString());
@@ -88,7 +115,7 @@ class ApiService extends NetworkService {
   }
 
   Future<NetworkResponse> authUser(String email, password) async {
-    NetworkResponse response = await postWithOutAccessHeader('http://192.168.1.122:3003/api/token/', {
+    NetworkResponse response = await postWithOutAccessHeader('http://192.168.1.104:3003/api/token/', {
         'username': email,
         'password': password
     });

@@ -118,7 +118,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   return state.isPurchaseListLoading ? Center(child: CircularProgressIndicator()) : Column(
                     children: [
                       for (Purchase purchase in state.firstThreePurchase)
-                        PurchaseElement(title: purchase.title, amount: purchase.amount, date: purchase.date)
+                        PurchaseElement(
+                            title: purchase.title,
+                            amount: purchase.amount,
+                            date: purchase.date,
+                            onTap: () {},
+                        )
                     ],
                   );
                 }

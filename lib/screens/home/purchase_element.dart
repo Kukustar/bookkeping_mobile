@@ -2,11 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class PurchaseElement extends StatelessWidget {
-  const PurchaseElement({ Key? key, required this.title, required this.amount, required this.date }) : super(key: key);
+  const PurchaseElement({
+    Key? key,
+    required this.title,
+    required this.amount,
+    required this.date,
+    required this.onTap
+  }) : super(key: key);
 
   final String title;
   final double amount;
   final DateTime date;
+  final VoidCallback onTap;
 
   get formattedDate {
     final DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm');
@@ -27,7 +34,7 @@ class PurchaseElement extends StatelessWidget {
         child: Material(
           color: Colors.transparent,
           child: InkWell(
-            onTap: () {},
+            onTap: onTap,
             child: Container(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),

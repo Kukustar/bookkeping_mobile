@@ -21,66 +21,71 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Form(
-        // key: _formKey,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 50),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextFormField(
-                autocorrect: false,
-                controller: emailEditingController,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Enter email';
-                  }
-                },
-              ),
-              SizedBox(
-                height: 16,
-              ),
-              TextFormField(
-                controller: passwordEditingController,
-                obscuringCharacter: '*',
-                obscureText: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Enter password';
-                  }
-                },
-              ),
-              SizedBox(
-                height: 16,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: ElevatedButton(
-                        style: ButtonStyle(
-                          padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 20))
-                        ),
-                        onPressed: () {
-                          BlocProvider
-                              .of<AuthBloc>(context)
-                              .add(LoginUser(
-                              emailEditingController.text,
-                              passwordEditingController.text
-                          ));
-                          // if (_formKey.currentState!.validate()) {
-                          //
-                          // }
-                        },
-                        child: Text('Войти')
+    return GestureDetector(
+      onTap: () {
+        FocusScopeNode currentFocus = FocusScope.of(context);
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+      },
+      child: Scaffold(
+        body: Form(
+          // key: _formKey,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 50),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextFormField(
+                  autocorrect: false,
+                  controller: emailEditingController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Enter email';
+                    }
+                  },
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+                TextFormField(
+                  controller: passwordEditingController,
+                  obscuringCharacter: '*',
+                  obscureText: true,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Enter password';
+                    }
+                  },
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                          style: ButtonStyle(
+                            padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 20))
+                          ),
+                          onPressed: () {
+                            BlocProvider
+                                .of<AuthBloc>(context)
+                                .add(LoginUser(
+                                emailEditingController.text,
+                                passwordEditingController.text
+                            ));
+                          },
+                          child: Text('Войти')
+                      ),
                     ),
-                  ),
-                ],
-              )
-            ],
+                  ],
+                )
+              ],
+            ),
           ),
-        ),
-      )
+        )
+      ),
     );
   }
   

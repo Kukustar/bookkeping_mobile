@@ -2,7 +2,7 @@ import 'package:bookkeping_mobile/purchase/entity.dart';
 import 'package:bookkeping_mobile/purchase/purchase_bloc.dart';
 import 'package:bookkeping_mobile/purchase/purchase_event.dart';
 import 'package:bookkeping_mobile/purchase/purchase_state.dart';
-import 'package:bookkeping_mobile/screens/add_purchase.dart';
+import 'package:bookkeping_mobile/screens/purchase_form.dart';
 import 'package:bookkeping_mobile/screens/home/purchase_element.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,10 +30,11 @@ class PurchaseListScreen extends StatelessWidget {
         ),
         child: Icon(Icons.add),
         onPressed: () {
+          BlocProvider.of<PurchaseBloc>(context).add(PurchaseDateChanged(DateTime.now()));
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (_) => AddPurchaseScreen()
+                  builder: (_) => PurchaseFormScreen()
               )
           );
         },
@@ -78,6 +79,17 @@ class PurchaseListScreen extends StatelessWidget {
                     children: [
                       for (Purchase purchase in state.purchaseList)
                         PurchaseElement(
+                          onTap: () {
+                            BlocProvider.of<PurchaseBloc>(context).add(PurchaseAmountChanged(purchase.amount.toString()));
+                            BlocProvider.of<PurchaseBloc>(context).add(PurchaseTitleChanged(purchase.title));
+                            BlocProvider.of<PurchaseBloc>(context).add(PurchaseDateChanged(purchase.date));
+                            BlocProvider.of<PurchaseBloc>(context).add(IsFormUpdateChanged(true));
+                            BlocProvider.of<PurchaseBloc>(context).add(PurchaseIdChanged(purchase.id));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (_) => PurchaseFormScreen())
+                            );
+                          },
                           date: purchase.date,
                           amount: purchase.amount,
                           title: purchase.title,
