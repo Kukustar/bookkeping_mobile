@@ -28,7 +28,7 @@ class NetworkResponse {
     return const NetworkResponse(body: {}, status: NetworkResponseStatus.tokenExpire);
   }
 
-  factory NetworkResponse.successDelete(int status) {
+  factory NetworkResponse.deleteResponse(int status) {
     NetworkResponseStatus apiResponseStatus = NetworkResponseStatus.success;
     if (status != 204) {
       apiResponseStatus = NetworkResponseStatus.failed;
@@ -74,7 +74,6 @@ class NetworkService {
     Map<String, dynamic> decodedResponse = await json.decode(utf8.decode(response.bodyBytes));
 
     return NetworkResponse.fromBackend(decodedResponse, response.statusCode);
-
   }
 
   Future<NetworkResponse> deleteData(String endPoint, String accessToken) async {
@@ -86,7 +85,7 @@ class NetworkService {
         }
     );
 
-    return NetworkResponse.successDelete(response.statusCode);
+    return NetworkResponse.deleteResponse(response.statusCode);
   }
 
   Future<NetworkResponse> putData(String endPoint, String accessToken, Map<String, dynamic> body) async {
