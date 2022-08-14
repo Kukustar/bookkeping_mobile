@@ -5,7 +5,10 @@ import 'package:bookkeping_mobile/purchase/entity.dart';
 
 class PurchaseState {
   PurchaseState({
+    // todo need to refactor and use network status for navigation
+    this.successSaved = false,
     this.purchaseId = 0,
+    // todo need to refactor and id for status form
     this.isFormUpdate = false,
     this.purchaseList = const [],
     this.isPurchaseListLoading = false,
@@ -20,6 +23,8 @@ class PurchaseState {
     this.page = 1,
     this.count = 0
   });
+
+  final bool successSaved;
 
   final int purchaseId;
 
@@ -49,7 +54,7 @@ class PurchaseState {
 
   bool get canTapPrevButton {
     int totalPage = (count ~/ 25) + 1;
-    if (page <= totalPage && (count % 25) != 0 ) {
+    if (page <= totalPage) {
       return true;
     }
 
@@ -70,7 +75,8 @@ class PurchaseState {
     String? formStateTitleError,
     String? formStateAmountError,
     DateTime? formStateDate,
-    TextEditingController? formStateDateTimeController
+    TextEditingController? formStateDateTimeController,
+    bool? successSaved
   }) {
     return PurchaseState(
       count: count ?? this.count,
@@ -87,6 +93,7 @@ class PurchaseState {
       formStateAmountError: formStateAmountError ?? this.formStateAmountError,
       formStateTitleError: formStateTitleError ?? this.formStateTitleError,
       isFormUpdate: isFormUpdate ?? this.isFormUpdate,
+      successSaved: successSaved ?? this.successSaved,
     );
   }
 }

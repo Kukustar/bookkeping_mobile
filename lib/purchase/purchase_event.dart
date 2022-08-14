@@ -87,3 +87,12 @@ class IsFormUpdateChanged extends PurchaseEvent {
 class ClearPurchaseForm extends PurchaseEvent {}
 
 class PurchaseUpdate extends PurchaseEvent {}
+
+class PurchaseDelete extends PurchaseEvent {}
+
+class CanNavigateChanged extends PurchaseEvent {
+  CanNavigateChanged(this._successSaved);
+  final bool _successSaved;
+
+  bool get successSaved => _successSaved;
+}

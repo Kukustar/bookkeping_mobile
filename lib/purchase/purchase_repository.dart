@@ -4,12 +4,16 @@ import 'package:bookkeping_mobile/purchase/entity.dart';
 import 'package:bookkeping_mobile/service/core/api_service.dart';
 import 'package:bookkeping_mobile/service/core/network_service.dart';
 
+
+// todo refactor: send response request to bloc and after it parse
+
 class PurchaseRepository {
   static const purchaseEndPoint = 'http://192.168.1.104:3003/purchases/';
 
   final _purchaseController = StreamController<List<Purchase>>();
   final _tokenExpireController = StreamController<bool>();
   final _countController = StreamController<int>();
+  final _canNavigateController = StreamController<bool>();
 
   final _purchaseErrorController = StreamController<Map<String, dynamic>>();
 
@@ -27,6 +31,28 @@ class PurchaseRepository {
 
   Stream<int> get listCount async* {
     yield* _countController.stream;
+  }
+
+  // todo use response network response for navigation
+  Stream<bool> get canNavigate async* {
+    yield* _canNavigateController.stream;
+  }
+
+  Future<void> deletePurchaseFromBackend(String purchaseId) async {
+    NetworkResponse response = await ApiService()
+        .wrapRequestWithTokenCheck(ApiService().deleteData, '$purchaseEndPoint$purchaseId/'
+    );
+
+    switch (response.status) {
+      case NetworkResponseStatus.success:
+        _canNavigateController.add(true);
+        break;
+      case NetworkResponseStatus.failed:
+        break;
+      case NetworkResponseStatus.tokenExpire:
+        _tokenExpireController.add(true);
+        break;
+    }
   }
 
   Future<void> getPurchasesFromBackend({ page = 1 }) async {
@@ -56,6 +82,7 @@ class PurchaseRepository {
 
     switch (response.status) {
       case NetworkResponseStatus.success:
+        _canNavigateController.add(true);
         break;
       case NetworkResponseStatus.failed:
         break;
@@ -74,6 +101,7 @@ class PurchaseRepository {
 
     switch (response.status) {
       case NetworkResponseStatus.success:
+        _canNavigateController.add(true);
         break;
       case NetworkResponseStatus.failed:
         _purchaseErrorController.add(response.body);

@@ -26,21 +26,6 @@ class ApiService extends NetworkService {
      return true;
    }
 
-  //  Future<Map<String, dynamic>> backendFetch(String endPoint) async {
-  //
-  //   // todo first iteration: if expire date end navigate user to login
-  //   // todo second iteration: if expire date end refresh all tokens
-  //   NetworkResponse response = await wrapRequestWithTokenCheck(fetch, endPoint);
-  //
-  //   if (response.status == NetworkResponseStatus.failed) {
-  //     //  todo view some error
-  //   }
-  //
-  //   return response.body;
-  // }
-
-
-
   Future<NetworkResponse> wrapRequestWithTokenCheck(Future<NetworkResponse> Function(String, String) requestFunction, String endPoint) async {
     final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
     final SharedPreferences prefs = await _prefs;

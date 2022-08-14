@@ -29,6 +29,8 @@ class PurchaseBloc extends Bloc<PurchaseEvent, PurchaseState> {
    on<ClearPurchaseForm>(_onClearPurchaseForm);
    on<PurchaseIdChanged>(_onPurchaseIdChanged);
    on<PurchaseUpdate>(_onPurchaseUpdate);
+   on<CanNavigateChanged>(_onCanNavigateChanged);
+   on<PurchaseDelete>(_onPurchaseDelete);
    _tokenExpireSubscription = _purchaseRepository.tokenExpire.listen(
            (tokenExpire) => add(AuthStatusChangedByPurchase(tokenExpire))
    );
@@ -42,6 +44,9 @@ class PurchaseBloc extends Bloc<PurchaseEvent, PurchaseState> {
    _errorSubscription = _purchaseRepository.error.listen(
            (error) => add(PurchaseErrorChanged(error))
    );
+   _subscriptionCanNavigate = _purchaseRepository.canNavigate.listen(
+           (flag) => add(CanNavigateChanged(flag))
+   );
   }
 
   final PurchaseRepository _purchaseRepository;
@@ -51,6 +56,7 @@ class PurchaseBloc extends Bloc<PurchaseEvent, PurchaseState> {
   late StreamSubscription<List<Purchase>> _purchaseListSubscription;
   late StreamSubscription<int> _purchaseCountSubscription;
   late StreamSubscription<Map<String, dynamic>> _errorSubscription;
+  late StreamSubscription<bool> _subscriptionCanNavigate;
 
   _onPurchaseUpdate(PurchaseUpdate event, Emitter<PurchaseState> emit) async {
 
@@ -61,6 +67,10 @@ class PurchaseBloc extends Bloc<PurchaseEvent, PurchaseState> {
       'date': state.formStateDate.toString(),
       'description': ''
     });
+  }
+
+  _onPurchaseDelete(PurchaseDelete event, Emitter<PurchaseState> emit) async {
+    await _purchaseRepository.deletePurchaseFromBackend(state.purchaseId.toString());
   }
 
   _onPurchaseIdChanged(PurchaseIdChanged event, Emitter<PurchaseState> emit) {
@@ -75,7 +85,8 @@ class PurchaseBloc extends Bloc<PurchaseEvent, PurchaseState> {
         formStateTitleError: '',
         formStateAmount: '',
         isFormUpdate: false,
-        purchaseId: 0
+        purchaseId: 0,
+        successSaved: false
     ));
   }
 
@@ -88,6 +99,10 @@ class PurchaseBloc extends Bloc<PurchaseEvent, PurchaseState> {
     if (errors.containsKey('title')) {
       emit(state.copyWith(formStateTitleError: errors['title'].first));
     }
+  }
+
+  _onCanNavigateChanged(CanNavigateChanged event, Emitter<PurchaseState> emit) {
+    emit(state.copyWith(successSaved: event.successSaved));
   }
 
   _onIsFormUpdateChanged(IsFormUpdateChanged event, Emitter<PurchaseState> emit) {

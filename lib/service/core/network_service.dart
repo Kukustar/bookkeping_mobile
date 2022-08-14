@@ -27,6 +27,14 @@ class NetworkResponse {
   factory NetworkResponse.tokenExpire() {
     return const NetworkResponse(body: {}, status: NetworkResponseStatus.tokenExpire);
   }
+
+  factory NetworkResponse.successDelete(int status) {
+    NetworkResponseStatus apiResponseStatus = NetworkResponseStatus.success;
+    if (status != 204) {
+      apiResponseStatus = NetworkResponseStatus.failed;
+    }
+    return NetworkResponse(body: {}, status: apiResponseStatus);
+  }
 }
 
 class NetworkService {
@@ -67,6 +75,18 @@ class NetworkService {
 
     return NetworkResponse.fromBackend(decodedResponse, response.statusCode);
 
+  }
+
+  Future<NetworkResponse> deleteData(String endPoint, String accessToken) async {
+    var response = await http.delete(
+        Uri.parse(endPoint),
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+          'Authorization': "Bearer $accessToken"
+        }
+    );
+
+    return NetworkResponse.successDelete(response.statusCode);
   }
 
   Future<NetworkResponse> putData(String endPoint, String accessToken, Map<String, dynamic> body) async {
