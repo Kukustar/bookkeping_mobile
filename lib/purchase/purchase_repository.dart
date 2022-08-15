@@ -8,7 +8,7 @@ import 'package:bookkeping_mobile/service/core/network_service.dart';
 // todo refactor: send response request to bloc and after it parse
 
 class PurchaseRepository {
-  static const purchaseEndPoint = 'http://192.168.1.104:3003/purchases/';
+  String get purchaseEndPoint => '${const String.fromEnvironment('API_HOST')}/purchases/';
 
   final _purchaseController = StreamController<List<Purchase>>();
   final _tokenExpireController = StreamController<bool>();

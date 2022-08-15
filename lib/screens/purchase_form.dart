@@ -1,7 +1,6 @@
 import 'package:bookkeping_mobile/purchase/purchase_bloc.dart';
 import 'package:bookkeping_mobile/purchase/purchase_event.dart';
 import 'package:bookkeping_mobile/purchase/purchase_state.dart';
-import 'package:bookkeping_mobile/screens/purchase_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -132,22 +131,23 @@ class _PurchaseFormScreenState extends State<PurchaseFormScreen> {
                         ],
                       ),
                       SizedBox(height: 26,),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: ElevatedButton(
-                                style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(Colors.red),
-                                  padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 20))
-                                ),
-                                onPressed: () {
-                                  BlocProvider.of<PurchaseBloc>(context).add(PurchaseDelete());
-                                },
-                                child: Text('Удалить')
+                      if (state.isFormUpdate)
+                        Row(
+                          children: [
+                            Expanded(
+                              child: ElevatedButton(
+                                  style: ButtonStyle(
+                                      backgroundColor: MaterialStateProperty.all(Colors.red),
+                                      padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 20))
+                                  ),
+                                  onPressed: () {
+                                    BlocProvider.of<PurchaseBloc>(context).add(PurchaseDelete());
+                                  },
+                                  child: Text('Удалить')
+                              ),
                             ),
-                          ),
-                        ],
-                      )
+                          ],
+                        )
                     ],
                   ),
                 ) ;
