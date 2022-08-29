@@ -1,15 +1,21 @@
 import 'package:bookkeping_mobile/auth/auth_bloc.dart';
 import 'package:bookkeping_mobile/auth/auth_event.dart';
+import 'package:bookkeping_mobile/balance/bloc.dart';
+import 'package:bookkeping_mobile/balance/event.dart';
+import 'package:bookkeping_mobile/balance/repository.dart';
+import 'package:bookkeping_mobile/balance/state.dart';
 
 import 'package:bookkeping_mobile/purchase/entity.dart';
 import 'package:bookkeping_mobile/purchase/purchase_bloc.dart';
 import 'package:bookkeping_mobile/purchase/purchase_event.dart';
 import 'package:bookkeping_mobile/purchase/purchase_state.dart';
+import 'package:bookkeping_mobile/screens/home/balance_element.dart';
 
 import 'package:bookkeping_mobile/screens/home/purchase_element.dart';
 import 'package:bookkeping_mobile/screens/purchase_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -24,6 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       BlocProvider.of<PurchaseBloc>(context).add(LoadPurchases());
+      BlocProvider.of<BalanceBloc>(context).add(BalanceLoad());
     });
     super.initState();
   }
@@ -57,6 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: RefreshIndicator(
         onRefresh: () async {
           BlocProvider.of<PurchaseBloc>(context).add(LoadPurchases());
+          BlocProvider.of<BalanceBloc>(context).add(BalanceLoad());
         },
         child: ListView(
           children: [
@@ -71,20 +79,26 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              child: Container(
-                height: 200,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(
-                    color: Theme.of(context).colorScheme.primary
-                  )
-                ),
-              )
+            BlocBuilder<BalanceBloc, BalanceState>(
+              builder: (context, state) {
+                return state.isLoading ? Center(child: CircularProgressIndicator()) :  BalanceElement(
+                    title: 'Общий баланс',
+                    amount: NumberFormat('#,###').format(state.balance).toString().replaceAll(',', ' ') ,
+                    date: DateTime.now(),
+                    onTap: () {},
+                );
+              }
             ),
+            SizedBox(height: 10,),
+            Divider(
+              color: Colors.red,
+              height: 0.5,
+              indent: 3,
+              endIndent: 3,
+            ),
+
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.only(left: 20,right: 5),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -98,7 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   BlocBuilder<PurchaseBloc, PurchaseState>(
                     builder: (context, state) {
                       return state.purchaseList.length > 3 ?
-                      ElevatedButton(
+                      TextButton(
                           onPressed: () {
                             Navigator.push(
                                 context,
@@ -130,9 +144,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 }
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
+            Divider(
+              color: Colors.grey.withAlpha(90),
+              height: 0.5, 
+              indent: 3,
+              endIndent: 3,
+            ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.only(left: 20,right: 5),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -146,13 +166,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   BlocBuilder<PurchaseBloc, PurchaseState>(
                     builder: (context, state) {
                       return state.purchaseList.length > 3
-                          ? ElevatedButton(onPressed: () {}, child: Text('Еще'))
+                          ? TextButton(onPressed: () {}, child: Text('Еще'))
                           : SizedBox();
                     },
                   ),
                 ],
               ),
             ),
+
             Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                 child: Container(
@@ -165,8 +186,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 )
             ),
+            const SizedBox(height: 15),
+            Divider(
+              color: Colors.grey.withAlpha(90),
+              height: 0.5,
+              indent: 3,
+              endIndent: 3,
+            ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.only(left: 20,right: 5),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -180,7 +208,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   BlocBuilder<PurchaseBloc, PurchaseState>(
                     builder: (context, state) {
                       return state.purchaseList.length > 3
-                          ? ElevatedButton(onPressed: () {}, child: Text('Еще'))
+                          ? TextButton(onPressed: () {}, child: Text('Еще'))
                           : SizedBox();
                     },
                   ),

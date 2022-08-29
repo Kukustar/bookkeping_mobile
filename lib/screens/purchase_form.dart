@@ -1,3 +1,5 @@
+import 'package:bookkeping_mobile/balance/bloc.dart';
+import 'package:bookkeping_mobile/balance/event.dart';
 import 'package:bookkeping_mobile/purchase/purchase_bloc.dart';
 import 'package:bookkeping_mobile/purchase/purchase_event.dart';
 import 'package:bookkeping_mobile/purchase/purchase_state.dart';
@@ -37,6 +39,7 @@ class _PurchaseFormScreenState extends State<PurchaseFormScreen> {
         if (state.successSaved) {
           BlocProvider.of<PurchaseBloc>(context).add(ClearPurchaseForm());
           BlocProvider.of<PurchaseBloc>(context).add(LoadPurchases());
+          BlocProvider.of<BalanceBloc>(context).add(BalanceLoad());
           Navigator.pop(
               context
           );

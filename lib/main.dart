@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:bookkeping_mobile/balance/bloc.dart';
+import 'package:bookkeping_mobile/balance/repository.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:bookkeping_mobile/auth/auth_repository.dart';
@@ -29,6 +31,7 @@ void main() {
   runApp(App(
       authRepository: AuthRepository(),
       purchaseRepository: PurchaseRepository(),
+      balanceRepository: BalanceRepository(),
   )
   );
 }
@@ -37,12 +40,14 @@ class App extends StatelessWidget {
   App({
     Key? key,
     required this.authRepository,
-    required this.purchaseRepository
+    required this.purchaseRepository,
+    required this.balanceRepository
   }) : super(key: key);
 
 
   final AuthRepository authRepository;
   final PurchaseRepository purchaseRepository;
+  final BalanceRepository balanceRepository;
 
   final _navigatorKey = GlobalKey<NavigatorState>();
   NavigatorState get _navigator => _navigatorKey.currentState!;
@@ -52,7 +57,8 @@ class App extends StatelessWidget {
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider.value(value: authRepository),
-        RepositoryProvider.value(value: purchaseRepository)
+        RepositoryProvider.value(value: purchaseRepository),
+        RepositoryProvider.value(value: balanceRepository)
       ],
       child: MultiBlocProvider(
         providers: [
@@ -64,6 +70,9 @@ class App extends StatelessWidget {
                   purchaseRepository: purchaseRepository,
                   authRepository: authRepository
               )
+          ),
+          BlocProvider<BalanceBloc>(
+              create: (_) => BalanceBloc(balanceRepository: balanceRepository)
           )
         ],
         child: MaterialApp(
