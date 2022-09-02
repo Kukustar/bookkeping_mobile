@@ -63,7 +63,12 @@ class PurchaseListScreen extends StatelessWidget {
                 ),
                 BlocBuilder<PurchaseBloc, PurchaseState>(
                   builder: (context, state) {
-                    return Text('${state.page.toString()} страница');
+                    return Text(
+                      state.fromToHeader,
+                      style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                        color: greenColor
+                      ),
+                    );
                   }
                 ),
                 BlocBuilder<PurchaseBloc, PurchaseState>(

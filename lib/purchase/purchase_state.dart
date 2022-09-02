@@ -53,6 +53,17 @@ class PurchaseState {
     return purchaseList.slice(0, 10);
   }
 
+  String get fromToHeader {
+    if (purchaseList.isNotEmpty) {
+      String start = purchaseList.first.date.toHashMapKeyFormat();
+      String end = purchaseList.last.date.toHashMapKeyFormat();
+
+      return '$start - $end';
+    }
+
+    return '';
+  }
+
 
   List<String> get firstTenDates {
     return firstTenPurchase
