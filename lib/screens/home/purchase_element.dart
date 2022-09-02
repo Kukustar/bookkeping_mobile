@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class PurchaseElement extends StatelessWidget {
-  const PurchaseElement({
+class TransactionElement extends StatelessWidget {
+  const TransactionElement({
     Key? key,
     required this.title,
     required this.amount,

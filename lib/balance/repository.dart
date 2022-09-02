@@ -14,8 +14,7 @@ class BalanceRepository {
   }
 
   Future<void> getBalanceFromBackend() async {
-    NetworkResponse response = await ApiService()
-        .wrapRequestWithTokenCheck(ApiService().fetch, '$purchaseEndPoint');
+    NetworkResponse response = await ApiService().wrapRequestWithTokenCheck(ApiService().fetch, purchaseEndPoint);
 
     switch (response.status) {
       case NetworkResponseStatus.success:

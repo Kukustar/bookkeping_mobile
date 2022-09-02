@@ -44,12 +44,12 @@ class PurchaseState {
   final int page;
   final int count;
 
-  List<Purchase> get firstThreePurchase {
-    if (purchaseList.length <= 3) {
+  List<Purchase> get firstTenPurchase {
+    if (purchaseList.length <= 10) {
       return purchaseList;
     }
 
-    return purchaseList.slice(0, 3);
+    return purchaseList.slice(0, 10);
   }
 
   bool get canTapPrevButton {

@@ -7,7 +7,8 @@ import 'package:http/http.dart' as http;
 enum NetworkResponseStatus {
   success,
   failed,
-  tokenExpire
+  tokenExpire,
+  waiting
 }
 
 class NetworkResponse {
