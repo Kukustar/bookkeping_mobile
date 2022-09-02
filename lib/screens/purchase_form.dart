@@ -87,11 +87,12 @@ class _PurchaseFormScreenState extends State<PurchaseFormScreen> {
                       SizedBox(height: 30,),
                       TextField(
                         controller: amountEditing,
+                        autofocus: state.purchaseId == 0,
                         decoration: InputDecoration(
                           labelText: 'Сумма',
                           errorText: state.formStateAmountError == '' ? null : state.formStateAmountError
                         ),
-                        keyboardType: TextInputType.number,
+                        keyboardType: TextInputType.numberWithOptions(decimal: true),
                         onChanged: (value) {
                           BlocProvider.of<PurchaseBloc>(context).add(PurchaseAmountChanged(value));
                         },

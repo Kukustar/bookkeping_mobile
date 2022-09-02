@@ -119,6 +119,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       appBar: AppBar(
         title: Text(''),),
       body: RefreshIndicator(
+        color: paleGreenColor,
         onRefresh: () async {
           BlocProvider.of<PurchaseBloc>(context).add(LoadPurchases());
           BlocProvider.of<BalanceBloc>(context).add(BalanceLoad());
