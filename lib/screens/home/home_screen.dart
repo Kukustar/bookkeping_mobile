@@ -19,6 +19,7 @@ import 'package:bookkeping_mobile/purchase/purchase_event.dart';
 import 'package:bookkeping_mobile/purchase/purchase_state.dart';
 import 'package:bookkeping_mobile/screens/deposit_form.dart';
 import 'package:bookkeping_mobile/screens/deposit_list.dart';
+import 'package:bookkeping_mobile/screens/home/all_accounts_card.dart';
 import 'package:bookkeping_mobile/screens/home/balance_element.dart';
 
 import 'package:bookkeping_mobile/screens/home/purchase_element.dart';
@@ -127,23 +128,27 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Text(
-                'Счета',
+                'Все счета',
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
                   fontSize: 16,
                 ),
               ),
             ),
-            BlocBuilder<BalanceBloc, BalanceState>(
-              builder: (context, state) {
-                return state.isLoading ? Center(child: CircularProgressIndicator()) :  BalanceElement(
-                    title: 'Общий баланс',
-                    amount: NumberFormat('#,###').format(state.balance).toString().replaceAll(',', ' ') ,
-                    date: DateTime.now(),
-                    onTap: () {},
-                );
-              }
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+              child: AllAccountsCard(),
             ),
+            // BlocBuilder<BalanceBloc, BalanceState>(
+            //   builder: (context, state) {
+            //     return state.isLoading ? Center(child: CircularProgressIndicator()) :  BalanceElement(
+            //         title: 'Общий баланс',
+            //         amount: NumberFormat('#,###').format(state.balance).toString().replaceAll(',', ' ') ,
+            //         date: DateTime.now(),
+            //         onTap: () {},
+            //     );
+            //   }
+            // ),
             const SizedBox(height: 15),
 
             Container(
