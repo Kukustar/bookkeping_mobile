@@ -49,20 +49,17 @@ class TransactionElement extends StatelessWidget {
                           child: Text(
                             title,
                             overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.bodyText1,
                           ),
                         ),
                         Text(
                           '${NumberFormat('#,###').format(amount).toString().replaceAll(',', ' ')} ₽',
-                          style: TextStyle(
-                            color: greenColor
-                          ),
+                          style: Theme.of(context).textTheme.bodyText1,
                         )
                       ],
                     ),
                     Text(
                       formattedDate,
-                      style: TextStyle(
-                      ),
                     )
                   ],
                 ),

@@ -94,13 +94,52 @@ class App extends StatelessWidget {
         ],
         child: MaterialApp(
           theme: ThemeData(
+              textTheme: const TextTheme(
+                subtitle1: TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.w400
+                ),
+                subtitle2: TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.w400
+                ),
+                bodyText2: TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.w400,
+                ),
+                bodyText1: TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.w400,
+                    fontSize: 16
+                ),
+                headline6: TextStyle(
+                  fontFamily: 'Montserrat',
+                  fontWeight: FontWeight.w600
+                ),
+                headline5: TextStyle(
+                  fontFamily: 'Montserrat',
+                  fontWeight: FontWeight.w600
+                ),
+                headline4: TextStyle(
+                  fontFamily: 'Montserrat',
+                  fontWeight: FontWeight.w600
+                ),
+                caption: TextStyle(
+                  fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.w100
+                ),
+                button: TextStyle(
+                  fontFamily: 'Montserrat',
+                  fontWeight: FontWeight.w600,
+                )
+              ),
               elevatedButtonTheme: ElevatedButtonThemeData(
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all<Color>(greenColor), //button color
-                  foregroundColor: MaterialStateProperty.all<Color>(Color(0xffffffff),), //text (and icon)
+                  foregroundColor: MaterialStateProperty.all<Color>(const Color(0xffffffff),),
                 ),
               ),
-              inputDecorationTheme: InputDecorationTheme(
+              inputDecorationTheme: const InputDecorationTheme(
                   contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                   enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: paleGreenColor)),
@@ -111,6 +150,7 @@ class App extends StatelessWidget {
             appBarTheme: AppBarTheme(
               backgroundColor: biegeColor,
               elevation: 0,
+              titleTextStyle: Theme.of(context).textTheme.headline5,
               iconTheme: IconThemeData(
                 color: coralColor
               )

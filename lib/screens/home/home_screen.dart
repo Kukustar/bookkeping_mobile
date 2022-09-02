@@ -125,15 +125,11 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
         },
         child: ListView(
           children: [
-            const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Text(
                 'Все счета',
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
-                ),
+                style: Theme.of(context).textTheme.subtitle1,
               ),
             ),
             Padding(
@@ -160,8 +156,18 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                     minHeight: 30
                                 ),
                                 children: [
-                                  Text('Прошедшие'),
-                                  Text('Будущие')
+                                  Text(
+                                      'Прошедшие',
+                                      style: Theme.of(context).textTheme.subtitle2!.copyWith(
+                                        color: state.viewTransactions.first ? Colors.white : greenColor
+                                      ),
+                                  ),
+                                  Text(
+                                      'Будущие',
+                                      style: Theme.of(context).textTheme.subtitle2!.copyWith(
+                                          color: state.viewTransactions.last ? Colors.white : greenColor
+                                      ),
+                                  )
                                 ],
                                 onPressed: (int index) {
                                   BlocProvider.of<HomeBloc>(context).add(ChangeWhatTransactionsView(index));
@@ -182,10 +188,13 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                     child: TabBar(
                       indicatorColor: coralColor,
                       labelColor: coralColor,
+                      labelStyle: Theme.of(context).textTheme.subtitle2!.copyWith(
+                        fontSize: 13.2
+                      ),
                       unselectedLabelColor: Colors.grey,
                       controller: _tabController,
                       tabs: [
-                        Tab(text: 'Траты'),
+                        Tab(text: 'Траты',),
                         Tab(text: 'Пополнения'),
                         Tab(text: 'Все')
                       ],
@@ -214,9 +223,10 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                         },
                                         child: Text(
                                             'Еще',
-                                            style: TextStyle(
-                                              color: coralColor
-                                            ),
+                                            style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                                              color: coralColor,
+                                              fontWeight: FontWeight.w600
+                                            )
                                         )
                                     ) :
                                     SizedBox();
@@ -238,8 +248,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                             padding: const EdgeInsets.symmetric(horizontal: 20),
                                             child: Text(
                                               DateTime.parse(date).isSameDate(now) ? 'Сегодня' : DateTime.now().isYesterday(DateTime.parse(date)) ? 'Вчера' : date,
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
+                                              style: Theme.of(context).textTheme.headline6!.copyWith(
                                                   color: paleGreenColor
                                               ),
                                             ),
@@ -265,12 +274,6 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                                 )
                                             ],
                                           ),
-                                          Divider(
-                                            color: biegeColor,
-                                            thickness: 2,
-                                            endIndent: 12,
-                                            indent: 12,
-                                          )
                                         ],
                                       )
                                   ],
@@ -300,9 +303,10 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                         },
                                         child: Text(
                                           'Еще',
-                                          style: TextStyle(
-                                              color: coralColor
-                                          ),
+                                            style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                                                color: coralColor,
+                                                fontWeight: FontWeight.w600
+                                            )
                                         )
                                     ) :
                                     SizedBox();
@@ -324,39 +328,32 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                             padding: const EdgeInsets.symmetric(horizontal: 20),
                                             child: Text(
                                               DateTime.parse(date).isSameDate(now) ? 'Сегодня' : DateTime.now().isYesterday(DateTime.parse(date)) ? 'Вчера' : date,
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
+                                              style: Theme.of(context).textTheme.headline6!.copyWith(
                                                   color: paleGreenColor
                                               ),
                                             ),
                                           ),
                                           Column(
                                             children: [
-                                              for (Deposit purchase in state.depositList.where((element) => element.date.isSameDate(DateTime.parse(date))))
+                                              for (Deposit deposit in state.depositList.where((element) => element.date.isSameDate(DateTime.parse(date))))
                                                 TransactionElement(
                                                   onTap: () {
-                                                    BlocProvider.of<PurchaseBloc>(context).add(PurchaseAmountChanged(purchase.amount.toString()));
-                                                    BlocProvider.of<PurchaseBloc>(context).add(PurchaseTitleChanged(purchase.title));
-                                                    BlocProvider.of<PurchaseBloc>(context).add(PurchaseDateChanged(purchase.date));
+                                                    BlocProvider.of<PurchaseBloc>(context).add(PurchaseAmountChanged(deposit.amount.toString()));
+                                                    BlocProvider.of<PurchaseBloc>(context).add(PurchaseTitleChanged(deposit.title));
+                                                    BlocProvider.of<PurchaseBloc>(context).add(PurchaseDateChanged(deposit.date));
                                                     BlocProvider.of<PurchaseBloc>(context).add(IsFormUpdateChanged(true));
-                                                    BlocProvider.of<PurchaseBloc>(context).add(PurchaseIdChanged(purchase.id));
+                                                    BlocProvider.of<PurchaseBloc>(context).add(PurchaseIdChanged(deposit.id));
                                                     Navigator.push(
                                                         context,
                                                         MaterialPageRoute(builder: (_) => PurchaseFormScreen())
                                                     );
                                                   },
-                                                  date: purchase.date,
-                                                  amount: purchase.amount,
-                                                  title: purchase.title,
+                                                  date: deposit.date,
+                                                  amount: deposit.amount,
+                                                  title: deposit.title,
                                                 )
                                             ],
                                           ),
-                                          Divider(
-                                            color: biegeColor,
-                                            thickness: 2,
-                                            endIndent: 12,
-                                            indent: 12,
-                                          )
                                         ],
                                       )
                                   ],

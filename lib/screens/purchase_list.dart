@@ -91,8 +91,7 @@ class PurchaseListScreen extends StatelessWidget {
                               padding: const EdgeInsets.symmetric(horizontal: 20),
                               child: Text(
                                   DateTime.parse(date).isSameDate(now) ? 'Сегодня' : DateTime.now().isYesterday(DateTime.parse(date)) ? 'Вчера' : date,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
+                                  style: Theme.of(context).textTheme.headline6!.copyWith(
                                     color: paleGreenColor
                                   ),
                               ),
@@ -118,12 +117,6 @@ class PurchaseListScreen extends StatelessWidget {
                                   )
                               ],
                             ),
-                            Divider(
-                              color: biegeColor,
-                              thickness: 2,
-                              endIndent: 12,
-                              indent: 12,
-                            )
                           ],
                         )
                     ],

@@ -23,18 +23,15 @@ class AllAccountsCard extends StatelessWidget {
             children: [
               Text(
                   'Общий баланс',
-                  style: TextStyle(
-                    color: Colors.grey,
-
-                  ),
+                  style: Theme.of(context).textTheme.caption!.copyWith(
+                    color: Colors.white
+                  )
               ),
               Text(
                   '${NumberFormat('#,###').format(state.balance).toString().replaceAll(',', ' ')} ₽',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24
-                  ),
+                  style: Theme.of(context).textTheme.headline4!.copyWith(
+                    color: Colors.white
+                  )
               )
             ],
           ),
