@@ -1,4 +1,5 @@
 import 'package:bookkeping_mobile/deposit/entity.dart';
+import 'package:bookkeping_mobile/extensions.dart';
 import 'package:bookkeping_mobile/service/core/network_service.dart';
 import 'package:flutter/material.dart';
 
@@ -34,6 +35,20 @@ class DepositState {
   TextEditingController? formStateDateTimeController;
 
   final NetworkResponseStatus saveResponseStatus;
+
+  List<String> get firstTenDates {
+    return getFirstTenDeposits
+        .map((e) => e.date.toHashMapKeyFormat())
+        .toSet()
+        .toList();
+  }
+
+  List<String> get depositListDates {
+    return depositList
+        .map((e) => e.date.toHashMapKeyFormat())
+        .toSet()
+        .toList();
+  }
 
   List<Deposit> get getFirstTenDeposits {
     if(depositList.length <=  10) {

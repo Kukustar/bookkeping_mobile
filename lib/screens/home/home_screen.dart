@@ -313,14 +313,51 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                           ),
                           BlocBuilder<DepositBloc, DepositState>(
                               builder: (context, state) {
+                                DateTime now = DateTime.now();
                                 return Column(
                                   children: [
-                                    for (Deposit deposit in state.depositList)
-                                      TransactionElement(
-                                          title: deposit.title,
-                                          amount: deposit.amount,
-                                          date: deposit.date,
-                                          onTap: () {}
+                                    for (String date in state.firstTenDates)
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                                            child: Text(
+                                              DateTime.parse(date).isSameDate(now) ? 'Сегодня' : DateTime.now().isYesterday(DateTime.parse(date)) ? 'Вчера' : date,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: paleGreenColor
+                                              ),
+                                            ),
+                                          ),
+                                          Column(
+                                            children: [
+                                              for (Deposit purchase in state.depositList.where((element) => element.date.isSameDate(DateTime.parse(date))))
+                                                TransactionElement(
+                                                  onTap: () {
+                                                    BlocProvider.of<PurchaseBloc>(context).add(PurchaseAmountChanged(purchase.amount.toString()));
+                                                    BlocProvider.of<PurchaseBloc>(context).add(PurchaseTitleChanged(purchase.title));
+                                                    BlocProvider.of<PurchaseBloc>(context).add(PurchaseDateChanged(purchase.date));
+                                                    BlocProvider.of<PurchaseBloc>(context).add(IsFormUpdateChanged(true));
+                                                    BlocProvider.of<PurchaseBloc>(context).add(PurchaseIdChanged(purchase.id));
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(builder: (_) => PurchaseFormScreen())
+                                                    );
+                                                  },
+                                                  date: purchase.date,
+                                                  amount: purchase.amount,
+                                                  title: purchase.title,
+                                                )
+                                            ],
+                                          ),
+                                          Divider(
+                                            color: biegeColor,
+                                            thickness: 2,
+                                            endIndent: 12,
+                                            indent: 12,
+                                          )
+                                        ],
                                       )
                                   ],
                                 );
