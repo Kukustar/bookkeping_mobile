@@ -1,3 +1,4 @@
+import 'package:bookkeping_mobile/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
 
@@ -50,6 +51,21 @@ class PurchaseState {
     }
 
     return purchaseList.slice(0, 10);
+  }
+
+
+  List<String> get firstTenDates {
+    return firstTenPurchase
+        .map((e) => e.date.toHashMapKeyFormat())
+        .toSet()
+        .toList();
+  }
+
+  List<String> get purchaseListDates {
+    return purchaseList
+        .map((e) => e.date.toHashMapKeyFormat())
+        .toSet()
+        .toList();
   }
 
   bool get canTapPrevButton {

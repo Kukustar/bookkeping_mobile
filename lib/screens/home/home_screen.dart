@@ -9,6 +9,7 @@ import 'package:bookkeping_mobile/deposit/entity.dart';
 import 'package:bookkeping_mobile/deposit/event.dart';
 import 'package:bookkeping_mobile/deposit/repository.dart';
 import 'package:bookkeping_mobile/deposit/state.dart';
+import 'package:bookkeping_mobile/extensions.dart';
 import 'package:bookkeping_mobile/home/bloc.dart';
 import 'package:bookkeping_mobile/home/event.dart';
 import 'package:bookkeping_mobile/home/state.dart';
@@ -22,7 +23,7 @@ import 'package:bookkeping_mobile/screens/deposit_list.dart';
 import 'package:bookkeping_mobile/screens/home/all_accounts_card.dart';
 import 'package:bookkeping_mobile/screens/home/balance_element.dart';
 
-import 'package:bookkeping_mobile/screens/home/purchase_element.dart';
+import 'package:bookkeping_mobile/screens/home/transaction_element.dart';
 import 'package:bookkeping_mobile/screens/purchase_form.dart';
 import 'package:bookkeping_mobile/screens/purchase_list.dart';
 import 'package:flutter/material.dart';
@@ -139,18 +140,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
               child: AllAccountsCard(),
             ),
-            // BlocBuilder<BalanceBloc, BalanceState>(
-            //   builder: (context, state) {
-            //     return state.isLoading ? Center(child: CircularProgressIndicator()) :  BalanceElement(
-            //         title: 'Общий баланс',
-            //         amount: NumberFormat('#,###').format(state.balance).toString().replaceAll(',', ' ') ,
-            //         date: DateTime.now(),
-            //         onTap: () {},
-            //     );
-            //   }
-            // ),
             const SizedBox(height: 15),
-
             Container(
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -237,14 +227,51 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                           ),
                           BlocBuilder<PurchaseBloc, PurchaseState>(
                               builder: (context, state) {
+                                DateTime now = DateTime.now();
                                 return state.isPurchaseListLoading ? Center(child: CircularProgressIndicator()) : Column(
                                   children: [
-                                    for (Purchase purchase in state.firstTenPurchase)
-                                      TransactionElement(
-                                        title: purchase.title,
-                                        amount: purchase.amount,
-                                        date: purchase.date,
-                                        onTap: () {},
+                                    for (String date in state.firstTenDates)
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                                            child: Text(
+                                              DateTime.parse(date).isSameDate(now) ? 'Сегодня' : DateTime.now().isYesterday(DateTime.parse(date)) ? 'Вчера' : date,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: paleGreenColor
+                                              ),
+                                            ),
+                                          ),
+                                          Column(
+                                            children: [
+                                              for (Purchase purchase in state.purchaseList.where((element) => element.date.isSameDate(DateTime.parse(date))))
+                                                TransactionElement(
+                                                  onTap: () {
+                                                    BlocProvider.of<PurchaseBloc>(context).add(PurchaseAmountChanged(purchase.amount.toString()));
+                                                    BlocProvider.of<PurchaseBloc>(context).add(PurchaseTitleChanged(purchase.title));
+                                                    BlocProvider.of<PurchaseBloc>(context).add(PurchaseDateChanged(purchase.date));
+                                                    BlocProvider.of<PurchaseBloc>(context).add(IsFormUpdateChanged(true));
+                                                    BlocProvider.of<PurchaseBloc>(context).add(PurchaseIdChanged(purchase.id));
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(builder: (_) => PurchaseFormScreen())
+                                                    );
+                                                  },
+                                                  date: purchase.date,
+                                                  amount: purchase.amount,
+                                                  title: purchase.title,
+                                                )
+                                            ],
+                                          ),
+                                          Divider(
+                                            color: biegeColor,
+                                            thickness: 2,
+                                            endIndent: 12,
+                                            indent: 12,
+                                          )
+                                        ],
                                       )
                                   ],
                                 );

@@ -4,7 +4,7 @@ import 'package:bookkeping_mobile/deposit/entity.dart';
 import 'package:bookkeping_mobile/deposit/event.dart';
 import 'package:bookkeping_mobile/deposit/state.dart';
 import 'package:bookkeping_mobile/screens/deposit_form.dart';
-import 'package:bookkeping_mobile/screens/home/purchase_element.dart';
+import 'package:bookkeping_mobile/screens/home/transaction_element.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
