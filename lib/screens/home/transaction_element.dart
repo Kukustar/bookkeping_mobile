@@ -1,8 +1,9 @@
+import 'package:bookkeping_mobile/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class PurchaseElement extends StatelessWidget {
-  const PurchaseElement({
+class TransactionElement extends StatelessWidget {
+  const TransactionElement({
     Key? key,
     required this.title,
     required this.amount,
@@ -16,7 +17,7 @@ class PurchaseElement extends StatelessWidget {
   final VoidCallback onTap;
 
   get formattedDate {
-    final DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm');
+    final DateFormat formatter = DateFormat('HH:mm');
     return formatter.format(date);
   }
 
@@ -46,14 +47,20 @@ class PurchaseElement extends StatelessWidget {
                       children: [
                         Flexible(
                           child: Text(
-                              title,
+                            title,
                             overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.bodyText1,
                           ),
                         ),
-                        Text('${amount.toString()} ₽')
+                        Text(
+                          '${NumberFormat('#,###').format(amount).toString().replaceAll(',', ' ')} ₽',
+                          style: Theme.of(context).textTheme.bodyText1,
+                        )
                       ],
                     ),
-                    Text(formattedDate)
+                    Text(
+                      formattedDate,
+                    )
                   ],
                 ),
               ),

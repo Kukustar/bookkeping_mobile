@@ -65,9 +65,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     Expanded(
                       child: ElevatedButton(
-                          style: ButtonStyle(
-                            padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 20))
-                          ),
                           onPressed: () {
                             BlocProvider
                                 .of<AuthBloc>(context)

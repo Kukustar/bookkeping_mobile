@@ -1,6 +1,10 @@
 import 'dart:io';
 import 'package:bookkeping_mobile/balance/bloc.dart';
 import 'package:bookkeping_mobile/balance/repository.dart';
+import 'package:bookkeping_mobile/constants.dart';
+import 'package:bookkeping_mobile/deposit/bloc.dart';
+import 'package:bookkeping_mobile/deposit/repository.dart';
+import 'package:bookkeping_mobile/home/bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:bookkeping_mobile/auth/auth_repository.dart';
@@ -32,6 +36,7 @@ void main() {
       authRepository: AuthRepository(),
       purchaseRepository: PurchaseRepository(),
       balanceRepository: BalanceRepository(),
+      depositRepository: DepositRepository(),
   )
   );
 }
@@ -41,13 +46,15 @@ class App extends StatelessWidget {
     Key? key,
     required this.authRepository,
     required this.purchaseRepository,
-    required this.balanceRepository
+    required this.balanceRepository,
+    required this.depositRepository
   }) : super(key: key);
 
 
   final AuthRepository authRepository;
   final PurchaseRepository purchaseRepository;
   final BalanceRepository balanceRepository;
+  final DepositRepository depositRepository;
 
   final _navigatorKey = GlobalKey<NavigatorState>();
   NavigatorState get _navigator => _navigatorKey.currentState!;
@@ -58,7 +65,8 @@ class App extends StatelessWidget {
       providers: [
         RepositoryProvider.value(value: authRepository),
         RepositoryProvider.value(value: purchaseRepository),
-        RepositoryProvider.value(value: balanceRepository)
+        RepositoryProvider.value(value: balanceRepository),
+        RepositoryProvider.value(value: depositRepository),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -73,9 +81,81 @@ class App extends StatelessWidget {
           ),
           BlocProvider<BalanceBloc>(
               create: (_) => BalanceBloc(balanceRepository: balanceRepository)
+          ),
+          BlocProvider<HomeBloc>(
+              create: (_) => HomeBloc()
+          ),
+          BlocProvider<DepositBloc>(
+              create: (_) => DepositBloc(
+                  repository: depositRepository,
+                  authRepository: authRepository
+              )
           )
         ],
         child: MaterialApp(
+          theme: ThemeData(
+              textTheme: const TextTheme(
+                subtitle1: TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.w400
+                ),
+                subtitle2: TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.w400
+                ),
+                bodyText2: TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.w400,
+                ),
+                bodyText1: TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.w400,
+                    fontSize: 16
+                ),
+                headline6: TextStyle(
+                  fontFamily: 'Montserrat',
+                  fontWeight: FontWeight.w600
+                ),
+                headline5: TextStyle(
+                  fontFamily: 'Montserrat',
+                  fontWeight: FontWeight.w600
+                ),
+                headline4: TextStyle(
+                  fontFamily: 'Montserrat',
+                  fontWeight: FontWeight.w600
+                ),
+                caption: TextStyle(
+                  fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.w100
+                ),
+                button: TextStyle(
+                  fontFamily: 'Montserrat',
+                  fontWeight: FontWeight.w600,
+                )
+              ),
+              elevatedButtonTheme: ElevatedButtonThemeData(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(greenColor), //button color
+                  foregroundColor: MaterialStateProperty.all<Color>(const Color(0xffffffff),),
+                ),
+              ),
+              inputDecorationTheme: const InputDecorationTheme(
+                  contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                  enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: paleGreenColor)),
+                  focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: greenColor)),
+                  labelStyle: TextStyle(color: greenColor)),
+              scaffoldBackgroundColor: biegeColor,
+            appBarTheme: AppBarTheme(
+              backgroundColor: biegeColor,
+              elevation: 0,
+              titleTextStyle: Theme.of(context).textTheme.headline5,
+              iconTheme: IconThemeData(
+                color: coralColor
+              )
+            )
+          ),
           localizationsDelegates: GlobalMaterialLocalizations.delegates,
           supportedLocales: [
             const Locale('ru'),

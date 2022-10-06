@@ -1,5 +1,6 @@
 import 'package:bookkeping_mobile/balance/bloc.dart';
 import 'package:bookkeping_mobile/balance/event.dart';
+import 'package:bookkeping_mobile/constants.dart';
 import 'package:bookkeping_mobile/purchase/purchase_bloc.dart';
 import 'package:bookkeping_mobile/purchase/purchase_event.dart';
 import 'package:bookkeping_mobile/purchase/purchase_state.dart';
@@ -53,6 +54,7 @@ class _PurchaseFormScreenState extends State<PurchaseFormScreen> {
           }
         },
         child: Scaffold(
+          backgroundColor: Colors.white,
           appBar: AppBar(
               leading: IconButton(
                 onPressed: () {
@@ -63,7 +65,15 @@ class _PurchaseFormScreenState extends State<PurchaseFormScreen> {
               ),
               title: BlocBuilder<PurchaseBloc, PurchaseState>(
                 builder: (context, state) {
-                  return state.isFormUpdate ? Text(state.formStateTitle) : Text('Добавить покупку');
+                  return state.isFormUpdate ? Text(
+                      state.formStateTitle,
+                      style: TextStyle(
+                        color: Colors.black
+                      ),
+                  ) : Text(
+                      'Добавить покупку',
+                      style: TextStyle(color: Colors.black),
+                  );
                 }
               )
           ),
@@ -74,14 +84,15 @@ class _PurchaseFormScreenState extends State<PurchaseFormScreen> {
                   padding: EdgeInsets.symmetric(horizontal: 20),
                   child: Column(
                     children: [
-                      SizedBox(height: 100,),
+                      SizedBox(height: 30,),
                       TextField(
                         controller: amountEditing,
+                        autofocus: state.purchaseId == 0,
                         decoration: InputDecoration(
                           labelText: 'Сумма',
                           errorText: state.formStateAmountError == '' ? null : state.formStateAmountError
                         ),
-                        keyboardType: TextInputType.number,
+                        keyboardType: TextInputType.numberWithOptions(decimal: true),
                         onChanged: (value) {
                           BlocProvider.of<PurchaseBloc>(context).add(PurchaseAmountChanged(value));
                         },
@@ -117,12 +128,10 @@ class _PurchaseFormScreenState extends State<PurchaseFormScreen> {
                       ),
                       SizedBox(height: 26,),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Expanded(
                             child: ElevatedButton(
-                                style: ButtonStyle(
-                                    padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 20))
-                                ),
                                 onPressed: () {
                                   state.isFormUpdate
                                       ? BlocProvider.of<PurchaseBloc>(context).add(PurchaseUpdate())
@@ -131,26 +140,20 @@ class _PurchaseFormScreenState extends State<PurchaseFormScreen> {
                                 child: state.isFormUpdate ? Text('Обновить') : Text('Добавить')
                             ),
                           ),
+                          if (state.purchaseId != 0)
+                          SizedBox(width: 10,),
+                          if (state.purchaseId != 0)
+                          ElevatedButton(
+                              style: Theme.of(context).elevatedButtonTheme.style!.copyWith(
+                                  backgroundColor: MaterialStateProperty.all(coralColor)
+                              ),
+                              onPressed: () {
+                                BlocProvider.of<PurchaseBloc>(context).add(PurchaseDelete());
+                              },
+                              child: Text('Удалить')
+                          )
                         ],
                       ),
-                      SizedBox(height: 26,),
-                      if (state.isFormUpdate)
-                        Row(
-                          children: [
-                            Expanded(
-                              child: ElevatedButton(
-                                  style: ButtonStyle(
-                                      backgroundColor: MaterialStateProperty.all(Colors.red),
-                                      padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 20))
-                                  ),
-                                  onPressed: () {
-                                    BlocProvider.of<PurchaseBloc>(context).add(PurchaseDelete());
-                                  },
-                                  child: Text('Удалить')
-                              ),
-                            ),
-                          ],
-                        )
                     ],
                   ),
                 ) ;

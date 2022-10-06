@@ -52,6 +52,9 @@ class PurchaseRepository {
       case NetworkResponseStatus.tokenExpire:
         _tokenExpireController.add(true);
         break;
+      case NetworkResponseStatus.waiting:
+        // TODO: Handle this case.
+        break;
     }
   }
 
@@ -72,6 +75,9 @@ class PurchaseRepository {
       case NetworkResponseStatus.tokenExpire:
         _tokenExpireController.add(true);
         break;
+      case NetworkResponseStatus.waiting:
+        // TODO: Handle this case.
+        break;
     }
   }
 
@@ -88,6 +94,9 @@ class PurchaseRepository {
         break;
       case NetworkResponseStatus.tokenExpire:
         _tokenExpireController.add(true);
+        break;
+      case NetworkResponseStatus.waiting:
+        // TODO: Handle this case.
         break;
     }
   }
@@ -108,6 +117,9 @@ class PurchaseRepository {
         break;
       case NetworkResponseStatus.tokenExpire:
         _tokenExpireController.add(true);
+        break;
+      case NetworkResponseStatus.waiting:
+        // TODO: Handle this case.
         break;
     }
   }

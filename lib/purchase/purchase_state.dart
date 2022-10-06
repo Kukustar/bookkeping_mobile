@@ -1,3 +1,4 @@
+import 'package:bookkeping_mobile/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
 
@@ -44,12 +45,38 @@ class PurchaseState {
   final int page;
   final int count;
 
-  List<Purchase> get firstThreePurchase {
-    if (purchaseList.length <= 3) {
+  List<Purchase> get firstTenPurchase {
+    if (purchaseList.length <= 10) {
       return purchaseList;
     }
 
-    return purchaseList.slice(0, 3);
+    return purchaseList.slice(0, 10);
+  }
+
+  String get fromToHeader {
+    if (purchaseList.isNotEmpty) {
+      String start = purchaseList.first.date.toHashMapKeyFormat();
+      String end = purchaseList.last.date.toHashMapKeyFormat();
+
+      return '$start - $end';
+    }
+
+    return '';
+  }
+
+
+  List<String> get firstTenDates {
+    return firstTenPurchase
+        .map((e) => e.date.toHashMapKeyFormat())
+        .toSet()
+        .toList();
+  }
+
+  List<String> get purchaseListDates {
+    return purchaseList
+        .map((e) => e.date.toHashMapKeyFormat())
+        .toSet()
+        .toList();
   }
 
   bool get canTapPrevButton {

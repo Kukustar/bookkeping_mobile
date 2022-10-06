@@ -1,14 +1,15 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
 
 import 'package:bloc/bloc.dart';
+import 'package:intl/intl.dart';
 
 import 'package:bookkeping_mobile/auth/auth_repository.dart';
 import 'package:bookkeping_mobile/purchase/entity.dart';
 import 'package:bookkeping_mobile/purchase/purchase_event.dart';
 import 'package:bookkeping_mobile/purchase/purchase_repository.dart';
 import 'package:bookkeping_mobile/purchase/purchase_state.dart';
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+
 
 class PurchaseBloc extends Bloc<PurchaseEvent, PurchaseState> {
   PurchaseBloc({ required PurchaseRepository purchaseRepository, required this.authRepository }) :
@@ -163,6 +164,7 @@ class PurchaseBloc extends Bloc<PurchaseEvent, PurchaseState> {
 
 
   _onLoadPage(LoadPage event, Emitter<PurchaseState> emit) async {
+    // todo return page or change it after if request failed
     emit(state.copyWith(isPurchasePageLoading: true, page: event.page));
     await _purchaseRepository.getPurchasesFromBackend(page: event.page);
     emit(state.copyWith(isPurchasePageLoading: false));
@@ -173,6 +175,7 @@ class PurchaseBloc extends Bloc<PurchaseEvent, PurchaseState> {
     _tokenExpireSubscription.cancel();
     _purchaseListSubscription.cancel();
     _purchaseCountSubscription.cancel();
+    _subscriptionCanNavigate.cancel();
     _errorSubscription.cancel();
     return super.close();
   }
