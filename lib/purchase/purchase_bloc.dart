@@ -67,11 +67,11 @@ class PurchaseBloc extends Bloc<PurchaseEvent, PurchaseState> {
       'id': state.purchaseId,
       'date': state.formStateDate.toString(),
       'description': ''
-    });
+    }, event.onSuccess);
   }
 
   _onPurchaseDelete(PurchaseDelete event, Emitter<PurchaseState> emit) async {
-    await _purchaseRepository.deletePurchaseFromBackend(state.purchaseId.toString());
+    await _purchaseRepository.deletePurchaseFromBackend(state.purchaseId.toString(), event.onSuccess);
   }
 
   _onPurchaseIdChanged(PurchaseIdChanged event, Emitter<PurchaseState> emit) {
@@ -128,7 +128,8 @@ class PurchaseBloc extends Bloc<PurchaseEvent, PurchaseState> {
     await _purchaseRepository.addPurchaseToBackend(
         state.formStateAmount,
         state.formStateTitle,
-        state.formStateDate as DateTime
+        state.formStateDate as DateTime,
+        event.onSuccess
     );
     emit(state.copyWith(isPurchaseAdding: false));
   }

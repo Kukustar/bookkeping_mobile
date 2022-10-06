@@ -1,6 +1,9 @@
 import 'package:bookkeping_mobile/service/core/network_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+
+typedef FutureRequestFunction = Future<NetworkResponse> Function(String, String, Map<String, dynamic>);
+
 class ApiService extends NetworkService {
    bool isAccessTokenValid(String? tokenSaveDateTime) {
      if(tokenSaveDateTime == null) {
@@ -49,9 +52,7 @@ class ApiService extends NetworkService {
     }
   }
 
-  Future<NetworkResponse> wrapPostRequestWithTokenCheck(
-      Future<NetworkResponse> Function(String, String, Map<String, dynamic>) requestFunction,
-      String endPoint, Map<String, dynamic> body) async {
+  Future<NetworkResponse> wrapPostRequestWithTokenCheck(FutureRequestFunction requestFunction, String endPoint, Map<String, dynamic> body) async {
     final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
     final SharedPreferences prefs = await _prefs;
     final String? expireDateString = prefs.getString('expire_date');

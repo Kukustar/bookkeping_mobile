@@ -33,7 +33,13 @@ class PurchaseCountChanged extends PurchaseEvent {
   int get count => _count;
 }
 
-class AddPurchase extends PurchaseEvent {}
+class AddPurchase extends PurchaseEvent {
+  AddPurchase(this._onSuccess);
+  final VoidCallback _onSuccess;
+
+  VoidCallback get onSuccess => _onSuccess;
+
+}
 
 class PurchaseDateChanged extends PurchaseEvent {
   PurchaseDateChanged(this._date);
@@ -86,9 +92,17 @@ class IsFormUpdateChanged extends PurchaseEvent {
 
 class ClearPurchaseForm extends PurchaseEvent {}
 
-class PurchaseUpdate extends PurchaseEvent {}
+class PurchaseUpdate extends PurchaseEvent {
+  PurchaseUpdate(this._onSuccess);
+  final VoidCallback _onSuccess;
+  VoidCallback get onSuccess => _onSuccess;
+}
 
-class PurchaseDelete extends PurchaseEvent {}
+class PurchaseDelete extends PurchaseEvent {
+  PurchaseDelete(this._onSuccess);
+  final VoidCallback _onSuccess;
+  VoidCallback get onSuccess => _onSuccess;
+}
 
 class CanNavigateChanged extends PurchaseEvent {
   CanNavigateChanged(this._successSaved);

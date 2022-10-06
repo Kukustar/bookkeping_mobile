@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'dart:ffi';
+import 'dart:ui';
 
 import 'package:bookkeping_mobile/purchase/entity.dart';
 import 'package:bookkeping_mobile/service/core/api_service.dart';
 import 'package:bookkeping_mobile/service/core/network_service.dart';
+import 'package:flutter/foundation.dart';
 
 
 // todo refactor: send response request to bloc and after it parse
@@ -38,14 +41,14 @@ class PurchaseRepository {
     yield* _canNavigateController.stream;
   }
 
-  Future<void> deletePurchaseFromBackend(String purchaseId) async {
+  Future<void> deletePurchaseFromBackend(String purchaseId, VoidCallback onSuccess) async {
     NetworkResponse response = await ApiService()
         .wrapRequestWithTokenCheck(ApiService().deleteData, '$purchaseEndPoint$purchaseId/'
     );
 
     switch (response.status) {
       case NetworkResponseStatus.success:
-        _canNavigateController.add(true);
+        onSuccess();
         break;
       case NetworkResponseStatus.failed:
         break;
@@ -81,14 +84,14 @@ class PurchaseRepository {
     }
   }
 
-  Future<void> updatePurchaseOnBackend(Map<String, dynamic> object) async {
+  Future<void> updatePurchaseOnBackend(Map<String, dynamic> object, VoidCallback onSuccess) async {
     NetworkResponse response = await ApiService().wrapPostRequestWithTokenCheck(
       ApiService().putData, '$purchaseEndPoint${object['id']}/', object
     );
 
     switch (response.status) {
       case NetworkResponseStatus.success:
-        _canNavigateController.add(true);
+        onSuccess();
         break;
       case NetworkResponseStatus.failed:
         break;
@@ -102,25 +105,32 @@ class PurchaseRepository {
   }
 
 
-  Future<void> addPurchaseToBackend(String amount, String title, DateTime date) async {
-    Map<String, dynamic> body = Map.from({ 'title': title, 'amount': amount, 'date': date.toString(), 'description': ''  });
-    NetworkResponse response = await ApiService().wrapPostRequestWithTokenCheck(
-            ApiService().postData, purchaseEndPoint, body
-    );
+  Future<void> addPurchaseToBackend(String amount, String title, DateTime date, VoidCallback onSuccess) async {
+   try {
+     Map<String, dynamic> body = Map.from({ 'title': title, 'amount': amount, 'date': date.toString(), 'description': ''  });
+     NetworkResponse response = await ApiService().wrapPostRequestWithTokenCheck(
+         ApiService().postData, purchaseEndPoint, body
+     );
 
-    switch (response.status) {
-      case NetworkResponseStatus.success:
-        _canNavigateController.add(true);
-        break;
-      case NetworkResponseStatus.failed:
-        _purchaseErrorController.add(response.body);
-        break;
-      case NetworkResponseStatus.tokenExpire:
-        _tokenExpireController.add(true);
-        break;
-      case NetworkResponseStatus.waiting:
-        // TODO: Handle this case.
-        break;
-    }
+     switch (response.status) {
+       case NetworkResponseStatus.success:
+         onSuccess();
+         break;
+       case NetworkResponseStatus.failed:
+         _purchaseErrorController.add(response.body);
+         break;
+       case NetworkResponseStatus.tokenExpire:
+         _tokenExpireController.add(true);
+         break;
+       case NetworkResponseStatus.waiting:
+       // TODO: Handle this case.
+         break;
+     }
+   } catch (exception, stackTrace) {
+     if (kDebugMode) {
+       print(exception);
+       print(stackTrace);
+     }
+   }
   }
 }
