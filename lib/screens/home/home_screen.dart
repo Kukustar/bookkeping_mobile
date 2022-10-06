@@ -339,14 +339,13 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                               for (Deposit deposit in state.depositList.where((element) => element.date.isSameDate(DateTime.parse(date))))
                                                 TransactionElement(
                                                   onTap: () {
-                                                    BlocProvider.of<PurchaseBloc>(context).add(PurchaseAmountChanged(deposit.amount.toString()));
-                                                    BlocProvider.of<PurchaseBloc>(context).add(PurchaseTitleChanged(deposit.title));
-                                                    BlocProvider.of<PurchaseBloc>(context).add(PurchaseDateChanged(deposit.date));
-                                                    BlocProvider.of<PurchaseBloc>(context).add(IsFormUpdateChanged(true));
-                                                    BlocProvider.of<PurchaseBloc>(context).add(PurchaseIdChanged(deposit.id));
+                                                    BlocProvider.of<DepositBloc>(context).add(DepositAmountChanged(deposit.amount.toString()));
+                                                    BlocProvider.of<DepositBloc>(context).add(DepositTitleChanged(deposit.title));
+                                                    BlocProvider.of<DepositBloc>(context).add(DepositDateChanged(deposit.date));
+                                                    BlocProvider.of<DepositBloc>(context).add(DepositIdChanged(deposit.id));
                                                     Navigator.push(
                                                         context,
-                                                        MaterialPageRoute(builder: (_) => PurchaseFormScreen())
+                                                        MaterialPageRoute(builder: (_) => DepositFormScreen())
                                                     );
                                                   },
                                                   date: deposit.date,
