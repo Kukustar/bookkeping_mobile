@@ -95,7 +95,12 @@ class PurchaseListScreen extends StatelessWidget {
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 20),
                               child: Text(
-                                  DateTime.parse(date).isSameDate(now) ? 'Сегодня' : DateTime.now().isYesterday(DateTime.parse(date)) ? 'Вчера' : date,
+                                DateTime.parse(date).isSameDate(now)
+                                      ? 'Сегодня - ${state.getSumByDate(date)}'
+                                      : DateTime.now()
+                                              .isYesterday(DateTime.parse(date))
+                                          ? 'Вчера - ${state.getSumByDate(date)}'
+                                          : '$date - ${state.getSumByDate(date)}',
                                   style: Theme.of(context).textTheme.headline6!.copyWith(
                                     color: paleGreenColor
                                   ),

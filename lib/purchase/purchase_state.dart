@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
 
 import 'package:bookkeping_mobile/purchase/entity.dart';
+import 'package:intl/intl.dart';
 
 class PurchaseState {
   PurchaseState({
@@ -51,6 +52,12 @@ class PurchaseState {
     }
 
     return purchaseList.slice(0, 10);
+  }
+
+  String getSumByDate(String date) {
+    List<Purchase> filteredPurchaseList = purchaseList.where((deposit) => deposit.date.toHashMapKeyFormat() == date).toList();
+    double amount = filteredPurchaseList.map((e) => e.amount).fold<double>(0, (previousValue, element) => previousValue + element);
+    return '${NumberFormat('#,###').format(amount).toString().replaceAll(',', ' ')} ₽';
   }
 
   String get fromToHeader {
