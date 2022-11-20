@@ -107,6 +107,8 @@ class PurchaseRepository {
     NetworkResponse response = await ApiService().wrapPostRequestWithTokenCheck(
             ApiService().postData, purchaseEndPoint, body
     );
+    print(response.status);
+    print(response.body);
 
     switch (response.status) {
       case NetworkResponseStatus.success:

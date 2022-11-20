@@ -1,3 +1,4 @@
+import 'package:bookkeping_mobile/jwt_decode.dart';
 import 'package:bookkeping_mobile/service/core/network_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -54,14 +55,14 @@ class ApiService extends NetworkService {
       String endPoint, Map<String, dynamic> body) async {
     final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
     final SharedPreferences prefs = await _prefs;
-    final String? expireDateString = prefs.getString('expire_date');
+    final String accessToken = prefs.getString('access').toString();
 
-    if (isAccessTokenValid(expireDateString)) {
+    if (!Jwt.isExpired(accessToken)) {
       final String accessToken = prefs.getString('access').toString();
       NetworkResponse response = await requestFunction(endPoint, accessToken, body);
 
       return response;
-    } else if (isCanUpdateAccessToken(expireDateString)) {
+    } else if (isCanUpdateAccessToken(Jwt.getExpiryDate(accessToken).toString())) {
 
       await updateAccessToken();
       final String accessToken = prefs.getString('access').toString();
