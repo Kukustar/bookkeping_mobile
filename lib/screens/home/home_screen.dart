@@ -48,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       }
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      BlocProvider.of<PurchaseBloc>(context).add(LoadPurchases());
+      BlocProvider.of<PurchaseBloc>(context).add(LoadPurchases(1));
       BlocProvider.of<BalanceBloc>(context).add(BalanceLoad());
       BlocProvider.of<DepositBloc>(context).add(LoadDeposits(1));
     });
@@ -120,7 +120,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       body: RefreshIndicator(
         color: paleGreenColor,
         onRefresh: () async {
-          BlocProvider.of<PurchaseBloc>(context).add(LoadPurchases());
+          BlocProvider.of<PurchaseBloc>(context).add(LoadPurchases(1));
           BlocProvider.of<BalanceBloc>(context).add(BalanceLoad());
         },
         child: ListView(

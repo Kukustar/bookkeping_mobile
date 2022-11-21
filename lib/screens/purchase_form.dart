@@ -39,7 +39,7 @@ class _PurchaseFormScreenState extends State<PurchaseFormScreen> {
       listener: (context, state) {
         if (state.successSaved) {
           BlocProvider.of<PurchaseBloc>(context).add(ClearPurchaseForm());
-          BlocProvider.of<PurchaseBloc>(context).add(LoadPurchases());
+          BlocProvider.of<PurchaseBloc>(context).add(LoadPurchases(state.page));
           BlocProvider.of<BalanceBloc>(context).add(BalanceLoad());
           Navigator.pop(
               context

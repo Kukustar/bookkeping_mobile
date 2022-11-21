@@ -126,6 +126,7 @@ class PurchaseListScreen extends StatelessWidget {
                                     date: purchase.date,
                                     amount: purchase.amount,
                                     title: purchase.title,
+                                    typeId: purchase.typeId,
                                   )
                               ],
                             ),

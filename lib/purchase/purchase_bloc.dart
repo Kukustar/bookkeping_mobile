@@ -128,7 +128,7 @@ class PurchaseBloc extends Bloc<PurchaseEvent, PurchaseState> {
 
   _onLoadPurchases(LoadPurchases event, Emitter<PurchaseState> emit) async {
     emit(state.copyWith(isPurchaseListLoading: true));
-    await _purchaseRepository.getPurchasesFromBackend();
+    await _purchaseRepository.getPurchasesFromBackend(page: event.page);
     await _purchaseRepository.getPurchaseTypes();
     emit(state.copyWith(isPurchaseListLoading: false));
   }

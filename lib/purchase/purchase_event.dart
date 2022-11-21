@@ -3,7 +3,12 @@ import 'package:flutter/material.dart';
 
 abstract class PurchaseEvent {}
 
-class LoadPurchases extends PurchaseEvent {}
+class LoadPurchases extends PurchaseEvent {
+  LoadPurchases(this._page);
+  final int _page;
+
+  int get page => _page;
+}
 
 class LoadPurchasesSuccess extends PurchaseEvent {
   LoadPurchasesSuccess(this._purchaseList);
