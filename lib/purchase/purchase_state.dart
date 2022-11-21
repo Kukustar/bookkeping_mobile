@@ -22,13 +22,16 @@ class PurchaseState {
     this.formStateDateTimeController,
     this.formStateTitleError = '',
     this.formStateAmountError = '',
+    this.formStatePurchaseTypeId = 0,
     this.page = 1,
-    this.count = 0
+    this.count = 0,
+    this.purchaseTypeList = const []
   });
 
   final bool successSaved;
 
   final int purchaseId;
+  final int formStatePurchaseTypeId;
 
   final String formStateAmount;
   final String formStateTitleError;
@@ -38,6 +41,7 @@ class PurchaseState {
 
   TextEditingController? formStateDateTimeController;
 
+  final List<PurchaseType> purchaseTypeList;
   final List<Purchase> purchaseList;
   final bool isPurchaseListLoading;
   final bool isPurchasePageLoading;
@@ -52,6 +56,17 @@ class PurchaseState {
     }
 
     return purchaseList.slice(0, 10);
+  }
+
+  String getPurchaseTitleById(int id) {
+    return purchaseTypeList.where((element) => element.id == id).first.title;
+  }
+
+  String purchaseTypeTitleWrapper(int id) {
+    if (id == 1) {
+      return '-';
+    }
+    return getPurchaseTitleById(id);
   }
 
   String getSumByDate(String date) {
@@ -110,11 +125,15 @@ class PurchaseState {
     String? formStateAmountError,
     DateTime? formStateDate,
     TextEditingController? formStateDateTimeController,
-    bool? successSaved
+    bool? successSaved,
+    List<PurchaseType>? purchaseTypeList,
+    int? formStatePurchaseTypeId
   }) {
     return PurchaseState(
       count: count ?? this.count,
       purchaseList: purchaseList ?? this.purchaseList,
+      purchaseTypeList: purchaseTypeList ?? this.purchaseTypeList,
+      formStatePurchaseTypeId: formStatePurchaseTypeId ?? this.formStatePurchaseTypeId,
       isPurchaseListLoading: isPurchaseListLoading ?? this.isPurchaseListLoading,
       isPurchasePageLoading: isPurchasePageLoading ?? this.isPurchasePageLoading,
       isPurchaseAdding: isPurchaseAdding ?? this.isPurchaseAdding,

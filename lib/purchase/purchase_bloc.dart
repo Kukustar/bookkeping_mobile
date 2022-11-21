@@ -32,6 +32,8 @@ class PurchaseBloc extends Bloc<PurchaseEvent, PurchaseState> {
    on<PurchaseUpdate>(_onPurchaseUpdate);
    on<CanNavigateChanged>(_onCanNavigateChanged);
    on<PurchaseDelete>(_onPurchaseDelete);
+   on<LoadPurchaseTypesSuccess>(_onLoadPurchaseTypesSuccess);
+   on<PurchaseTypeChanged>(_onPurchaseTypeChanged);
    _tokenExpireSubscription = _purchaseRepository.tokenExpire.listen(
            (tokenExpire) => add(AuthStatusChangedByPurchase(tokenExpire))
    );
@@ -48,6 +50,9 @@ class PurchaseBloc extends Bloc<PurchaseEvent, PurchaseState> {
    _subscriptionCanNavigate = _purchaseRepository.canNavigate.listen(
            (flag) => add(CanNavigateChanged(flag))
    );
+   _streamSubscriptionPurchaseType = _purchaseRepository.purchaseType.listen(
+           (data) => add(LoadPurchaseTypesSuccess(data))
+   );
   }
 
   final PurchaseRepository _purchaseRepository;
@@ -58,6 +63,11 @@ class PurchaseBloc extends Bloc<PurchaseEvent, PurchaseState> {
   late StreamSubscription<int> _purchaseCountSubscription;
   late StreamSubscription<Map<String, dynamic>> _errorSubscription;
   late StreamSubscription<bool> _subscriptionCanNavigate;
+  late StreamSubscription<List<dynamic>> _streamSubscriptionPurchaseType;
+
+  _onPurchaseTypeChanged(PurchaseTypeChanged event, Emitter<PurchaseState> emit) async {
+    emit(state.copyWith(formStatePurchaseTypeId: event.id));
+  }
 
   _onPurchaseUpdate(PurchaseUpdate event, Emitter<PurchaseState> emit) async {
 
@@ -66,7 +76,8 @@ class PurchaseBloc extends Bloc<PurchaseEvent, PurchaseState> {
       'amount': state.formStateAmount,
       'id': state.purchaseId,
       'date': state.formStateDate.toString(),
-      'description': ''
+      'description': '',
+      'type_id': state.formStatePurchaseTypeId
     });
   }
 
@@ -110,9 +121,15 @@ class PurchaseBloc extends Bloc<PurchaseEvent, PurchaseState> {
     emit(state.copyWith(isFormUpdate: event.isFormUpdate));
   }
 
+  _onLoadPurchaseTypesSuccess(LoadPurchaseTypesSuccess event, Emitter<PurchaseState> emit) {
+    List<PurchaseType> typeList = event.data.map((e) => PurchaseType.fromJson(e)).toList();
+    emit(state.copyWith(purchaseTypeList: typeList));
+  }
+
   _onLoadPurchases(LoadPurchases event, Emitter<PurchaseState> emit) async {
     emit(state.copyWith(isPurchaseListLoading: true));
     await _purchaseRepository.getPurchasesFromBackend();
+    await _purchaseRepository.getPurchaseTypes();
     emit(state.copyWith(isPurchaseListLoading: false));
   }
 
@@ -128,7 +145,8 @@ class PurchaseBloc extends Bloc<PurchaseEvent, PurchaseState> {
     await _purchaseRepository.addPurchaseToBackend(
         state.formStateAmount,
         state.formStateTitle,
-        state.formStateDate as DateTime
+        state.formStateDate as DateTime,
+        state.formStatePurchaseTypeId
     );
     emit(state.copyWith(isPurchaseAdding: false));
   }
@@ -177,6 +195,7 @@ class PurchaseBloc extends Bloc<PurchaseEvent, PurchaseState> {
     _purchaseCountSubscription.cancel();
     _subscriptionCanNavigate.cancel();
     _errorSubscription.cancel();
+    _streamSubscriptionPurchaseType.cancel();
     return super.close();
   }
 }

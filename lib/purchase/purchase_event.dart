@@ -42,6 +42,13 @@ class PurchaseDateChanged extends PurchaseEvent {
   DateTime get date => _date;
 }
 
+class PurchaseTypeChanged extends PurchaseEvent {
+  PurchaseTypeChanged(this._id);
+  final int _id;
+
+  int get id => _id;
+}
+
 class PurchaseAmountChanged extends PurchaseEvent {
   PurchaseAmountChanged(this._amount);
   final String _amount;
@@ -95,4 +102,11 @@ class CanNavigateChanged extends PurchaseEvent {
   final bool _successSaved;
 
   bool get successSaved => _successSaved;
+}
+
+class LoadPurchaseTypesSuccess extends PurchaseEvent {
+  LoadPurchaseTypesSuccess(this._data);
+  final List<dynamic> _data;
+
+  List<dynamic> get data => _data;
 }

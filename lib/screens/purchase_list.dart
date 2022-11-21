@@ -33,6 +33,7 @@ class PurchaseListScreen extends StatelessWidget {
         child: Icon(Icons.add),
         onPressed: () {
           BlocProvider.of<PurchaseBloc>(context).add(PurchaseDateChanged(DateTime.now()));
+          BlocProvider.of<PurchaseBloc>(context).add(PurchaseTypeChanged(1));
           Navigator.push(
               context,
               MaterialPageRoute(
@@ -116,6 +117,7 @@ class PurchaseListScreen extends StatelessWidget {
                                       BlocProvider.of<PurchaseBloc>(context).add(PurchaseDateChanged(purchase.date));
                                       BlocProvider.of<PurchaseBloc>(context).add(IsFormUpdateChanged(true));
                                       BlocProvider.of<PurchaseBloc>(context).add(PurchaseIdChanged(purchase.id));
+                                      BlocProvider.of<PurchaseBloc>(context).add(PurchaseTypeChanged(purchase.typeId));
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(builder: (_) => PurchaseFormScreen())

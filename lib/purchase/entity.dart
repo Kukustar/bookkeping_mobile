@@ -23,3 +23,21 @@ class Purchase {
     );
   }
 }
+
+class PurchaseType {
+
+  final int id;
+  final String title;
+
+  const PurchaseType({ this.id = 0, this.title = '' });
+
+  factory PurchaseType.fromJson(json) {
+    return PurchaseType(id: json['id'], title: json['title']);
+  }
+
+  @override
+  String toString() {
+    // TODO: implement toString
+    return '$id : $title';
+  }
+}

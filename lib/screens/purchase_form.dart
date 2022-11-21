@@ -80,6 +80,10 @@ class _PurchaseFormScreenState extends State<PurchaseFormScreen> {
           body: SingleChildScrollView(
             child: BlocBuilder<PurchaseBloc, PurchaseState>(
               builder: (context, state) {
+                List<DropdownMenuItem<String>> options = state.purchaseTypeList.map((e) => DropdownMenuItem(child: Text(e.title), value: e.title)).toList();
+                print(state.purchaseTypeList);
+                print(state.formStatePurchaseTypeId);
+                String selectedOption = state.purchaseTypeList.where((element) => element.id == state.formStatePurchaseTypeId).first.title;
                 return Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20),
                   child: Column(
@@ -96,6 +100,34 @@ class _PurchaseFormScreenState extends State<PurchaseFormScreen> {
                         onChanged: (value) {
                           BlocProvider.of<PurchaseBloc>(context).add(PurchaseAmountChanged(value));
                         },
+                      ),
+                      SizedBox(height: 26,),
+                      DecoratedBox(
+                        decoration: BoxDecoration(
+                            border: Border.all(color: paleGreenColor, width:1), //border of dropdown button
+                            borderRadius: BorderRadius.circular(5), //border raiuds of dropdown button
+
+                        ),
+                        child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<String>(
+                                  hint: Text('Категория', style: TextStyle(color: Colors.grey),),
+                                  isExpanded: true,
+                                  items: options,
+                                  value: selectedOption,
+                                  onChanged: (e) {
+                                    int id = state.purchaseTypeList.where((element) => element.title == e).first.id;
+                                    BlocProvider.of<PurchaseBloc>(context).add(PurchaseTypeChanged(id));
+
+                                    if (state.formStateTitle == '') {
+                                      BlocProvider.of<PurchaseBloc>(context).add(PurchaseTitleChanged(e.toString()));
+                                      titleEditing.text = e.toString();
+                                    }
+                                  }
+                              ),
+                            )
+                        ),
                       ),
                       SizedBox(height: 26,),
                       TextField(

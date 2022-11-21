@@ -9,6 +9,7 @@ import 'package:bookkeping_mobile/service/core/network_service.dart';
 
 class PurchaseRepository {
   String get purchaseEndPoint => '${const String.fromEnvironment('API_HOST')}/purchases/';
+  String get purchaseTypeEndPoint => '${const String.fromEnvironment('API_HOST')}/purchase-types/';
 
   final _purchaseController = StreamController<List<Purchase>>();
   final _tokenExpireController = StreamController<bool>();
@@ -16,6 +17,12 @@ class PurchaseRepository {
   final _canNavigateController = StreamController<bool>();
 
   final _purchaseErrorController = StreamController<Map<String, dynamic>>();
+
+  final _purchaseTypeController = StreamController<List<dynamic>>();
+
+  Stream<List<dynamic>> get purchaseType async* {
+    yield* _purchaseTypeController.stream;
+  }
 
   Stream<Map<String, dynamic>> get error async* {
     yield* _purchaseErrorController.stream;
@@ -56,6 +63,22 @@ class PurchaseRepository {
         // TODO: Handle this case.
         break;
     }
+  }
+
+  Future<void> getPurchaseTypes() async {
+    NetworkResponse response = await ApiService()
+      .wrapRequestWithTokenCheck(ApiService().fetch, purchaseTypeEndPoint);
+
+    switch (response.status) {
+      case NetworkResponseStatus.success:
+        _purchaseTypeController.add(response.body['results']);
+        break;
+      case NetworkResponseStatus.failed:
+      case NetworkResponseStatus.waiting:
+      case NetworkResponseStatus.tokenExpire:
+        break;
+    }
+
   }
 
   Future<void> getPurchasesFromBackend({ page = 1 }) async {
@@ -102,13 +125,11 @@ class PurchaseRepository {
   }
 
 
-  Future<void> addPurchaseToBackend(String amount, String title, DateTime date) async {
-    Map<String, dynamic> body = Map.from({ 'title': title, 'amount': amount, 'date': date.toString(), 'description': ''  });
+  Future<void> addPurchaseToBackend(String amount, String title, DateTime date, int purchaseType) async {
+    Map<String, dynamic> body = Map.from({ 'title': title, 'amount': amount, 'date': date.toString(), 'description': '', 'type_id': purchaseType  });
     NetworkResponse response = await ApiService().wrapPostRequestWithTokenCheck(
             ApiService().postData, purchaseEndPoint, body
     );
-    print(response.status);
-    print(response.body);
 
     switch (response.status) {
       case NetworkResponseStatus.success:

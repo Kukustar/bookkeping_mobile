@@ -21,14 +21,12 @@ import 'package:bookkeping_mobile/purchase/purchase_state.dart';
 import 'package:bookkeping_mobile/screens/deposit_form.dart';
 import 'package:bookkeping_mobile/screens/deposit_list.dart';
 import 'package:bookkeping_mobile/screens/home/all_accounts_card.dart';
-import 'package:bookkeping_mobile/screens/home/balance_element.dart';
 
 import 'package:bookkeping_mobile/screens/home/transaction_element.dart';
 import 'package:bookkeping_mobile/screens/purchase_form.dart';
 import 'package:bookkeping_mobile/screens/purchase_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -97,6 +95,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
           switch (_tabIndex) {
             case 0:
               BlocProvider.of<PurchaseBloc>(context).add(PurchaseDateChanged(now));
+              BlocProvider.of<PurchaseBloc>(context).add(PurchaseTypeChanged(1));
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -272,6 +271,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                                     BlocProvider.of<PurchaseBloc>(context).add(PurchaseDateChanged(purchase.date));
                                                     BlocProvider.of<PurchaseBloc>(context).add(IsFormUpdateChanged(true));
                                                     BlocProvider.of<PurchaseBloc>(context).add(PurchaseIdChanged(purchase.id));
+                                                    BlocProvider.of<PurchaseBloc>(context).add(PurchaseTypeChanged(purchase.typeId));
                                                     Navigator.push(
                                                         context,
                                                         MaterialPageRoute(builder: (_) => PurchaseFormScreen())
@@ -280,6 +280,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                                   date: purchase.date,
                                                   amount: purchase.amount,
                                                   title: purchase.title,
+                                                  typeId: purchase.typeId,
                                                 )
                                             ],
                                           ),

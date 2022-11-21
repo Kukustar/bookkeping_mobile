@@ -1,5 +1,7 @@
-import 'package:bookkeping_mobile/constants.dart';
+import 'package:bookkeping_mobile/purchase/purchase_bloc.dart';
+import 'package:bookkeping_mobile/purchase/purchase_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 class TransactionElement extends StatelessWidget {
@@ -8,13 +10,15 @@ class TransactionElement extends StatelessWidget {
     required this.title,
     required this.amount,
     required this.date,
-    required this.onTap
+    required this.onTap,
+    this.typeId
   }) : super(key: key);
 
   final String title;
   final double amount;
   final DateTime date;
   final VoidCallback onTap;
+  final int? typeId;
 
   get formattedDate {
     final DateFormat formatter = DateFormat('HH:mm');
@@ -58,9 +62,20 @@ class TransactionElement extends StatelessWidget {
                         )
                       ],
                     ),
-                    Text(
-                      formattedDate,
-                    )
+                    if (typeId != null)
+                      BlocBuilder<PurchaseBloc, PurchaseState>(
+                        builder: (context, state) {
+                          return Column(
+                            children: [
+                              SizedBox(height: 3,),
+                              Chip(
+                                label: Text(state.purchaseTypeTitleWrapper(typeId!)),
+                                shape:  RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5)) ) ,
+                              ),
+                            ],
+                          );
+                        }
+                      )
                   ],
                 ),
               ),
