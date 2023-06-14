@@ -81,8 +81,6 @@ class _PurchaseFormScreenState extends State<PurchaseFormScreen> {
             child: BlocBuilder<PurchaseBloc, PurchaseState>(
               builder: (context, state) {
                 List<DropdownMenuItem<String>> options = state.purchaseTypeList.map((e) => DropdownMenuItem(child: Text(e.title), value: e.title)).toList();
-                print(state.purchaseTypeList);
-                print(state.formStatePurchaseTypeId);
                 String selectedOption = state.purchaseTypeList.where((element) => element.id == state.formStatePurchaseTypeId).first.title;
                 return Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20),
@@ -105,7 +103,7 @@ class _PurchaseFormScreenState extends State<PurchaseFormScreen> {
                       DecoratedBox(
                         decoration: BoxDecoration(
                             border: Border.all(color: paleGreenColor, width:1), //border of dropdown button
-                            borderRadius: BorderRadius.circular(5), //border raiuds of dropdown button
+                            borderRadius: BorderRadius.circular(5), //border raiud  §s of dropdown button
 
                         ),
                         child: Padding(

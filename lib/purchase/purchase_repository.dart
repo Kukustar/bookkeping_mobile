@@ -78,7 +78,14 @@ class PurchaseRepository {
       case NetworkResponseStatus.tokenExpire:
         break;
     }
+  }
 
+  // todo remove to own bloc
+  Future<void> getStatisticByThisMonth() async {
+    NetworkResponse response = await ApiService()
+        .wrapRequestWithTokenCheck(ApiService().fetch, '${const String.fromEnvironment('API_HOST')}/statistic/?start=21-10-2022&end=21-10-2022');
+    print(response);
+    print(response.body);
   }
 
   Future<void> getPurchasesFromBackend({ page = 1 }) async {

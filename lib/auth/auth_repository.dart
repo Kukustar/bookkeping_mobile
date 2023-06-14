@@ -59,7 +59,6 @@ class AuthRepository {
 
   Future<void> authUser(String email, String password) async {
     NetworkResponse response = await ApiService().authUser(email, password);
-    print(response.status);
 
     if (response.status == NetworkResponseStatus.success) {
       _authStatusController.add(AuthStatus.authenticated);
