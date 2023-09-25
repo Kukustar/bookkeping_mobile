@@ -5,6 +5,7 @@ import 'package:bookkeping_mobile/purchase/entity.dart';
 import 'package:bookkeping_mobile/purchase/purchase_bloc.dart';
 import 'package:bookkeping_mobile/purchase/purchase_event.dart';
 import 'package:bookkeping_mobile/purchase/purchase_state.dart';
+import 'package:bookkeping_mobile/ui/widgets/calendar_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -157,6 +158,9 @@ class _PurchaseFormScreenState extends State<PurchaseFormScreen> {
                               initialDate: state.formStateDate as DateTime,
                               firstDate: DateTime(DateTime.now().year - 1, DateTime.now().month, DateTime.now().day),
                               lastDate: DateTime(DateTime.now().year + 1, DateTime.now().month, DateTime.now().day),
+                              builder: (context, child) {
+                                return CalendarBuilder(child: child as Widget);
+                              }
                           );
                           if (date != null) {
                             BlocProvider.of<PurchaseBloc>(context).add(PurchaseDateChanged(date));

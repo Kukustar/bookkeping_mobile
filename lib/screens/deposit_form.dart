@@ -5,6 +5,7 @@ import 'package:bookkeping_mobile/deposit/bloc.dart';
 import 'package:bookkeping_mobile/deposit/event.dart';
 import 'package:bookkeping_mobile/deposit/state.dart';
 import 'package:bookkeping_mobile/service/core/network_service.dart';
+import 'package:bookkeping_mobile/ui/widgets/calendar_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -119,6 +120,9 @@ class _DepositFormScreenState extends State<DepositFormScreen> {
                               initialDate: state.formStateDate as DateTime,
                               firstDate: DateTime(DateTime.now().year - 1, DateTime.now().month, DateTime.now().day),
                               lastDate: DateTime(DateTime.now().year + 1, DateTime.now().month, DateTime.now().day),
+                              builder: (context, child) {
+                                return CalendarBuilder(child: child as Widget);
+                              }
                             );
                             if (date != null) {
                               BlocProvider.of<DepositBloc>(context).add(DepositDateChanged(date));
