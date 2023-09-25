@@ -59,7 +59,11 @@ class PurchaseState {
   }
 
   String getPurchaseTitleById(int id) {
-    return purchaseTypeList.where((element) => element.id == id).first.title;
+    List<PurchaseType> res = purchaseTypeList.where((element) => element.id == id).toList();
+    if (res.isEmpty) {
+      return '-';
+    }
+    return res.first.title;
   }
 
   String purchaseTypeTitleWrapper(int id) {

@@ -29,6 +29,7 @@ class BalanceRepository {
         _balanceController.add(balance);
         break;
       case NetworkResponseStatus.failed:
+      case NetworkResponseStatus.waiting:
         break;
       case NetworkResponseStatus.tokenExpire:
         break;

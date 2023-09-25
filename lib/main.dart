@@ -94,6 +94,7 @@ class App extends StatelessWidget {
         ],
         child: MaterialApp(
           theme: ThemeData(
+              useMaterial3: true,
               textTheme: const TextTheme(
                 subtitle1: TextStyle(
                     fontFamily: 'Montserrat',
@@ -154,7 +155,7 @@ class App extends StatelessWidget {
               iconTheme: IconThemeData(
                 color: coralColor
               )
-            )
+            ),
           ),
           localizationsDelegates: GlobalMaterialLocalizations.delegates,
           supportedLocales: [

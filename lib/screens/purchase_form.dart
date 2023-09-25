@@ -1,6 +1,7 @@
 import 'package:bookkeping_mobile/balance/bloc.dart';
 import 'package:bookkeping_mobile/balance/event.dart';
 import 'package:bookkeping_mobile/constants.dart';
+import 'package:bookkeping_mobile/purchase/entity.dart';
 import 'package:bookkeping_mobile/purchase/purchase_bloc.dart';
 import 'package:bookkeping_mobile/purchase/purchase_event.dart';
 import 'package:bookkeping_mobile/purchase/purchase_state.dart';
@@ -81,7 +82,13 @@ class _PurchaseFormScreenState extends State<PurchaseFormScreen> {
             child: BlocBuilder<PurchaseBloc, PurchaseState>(
               builder: (context, state) {
                 List<DropdownMenuItem<String>> options = state.purchaseTypeList.map((e) => DropdownMenuItem(child: Text(e.title), value: e.title)).toList();
-                String selectedOption = state.purchaseTypeList.where((element) => element.id == state.formStatePurchaseTypeId).first.title;
+                List<PurchaseType> res = state.purchaseTypeList.where((element) => element.id == state.formStatePurchaseTypeId).toList();
+
+                String selectedOption = 'default';
+                if (res.isNotEmpty) {
+                  selectedOption = res.first.title;
+                }
+
                 return Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20),
                   child: Column(
